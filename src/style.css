@@ -1,0 +1,73 @@
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card {
+    display: flex;
+    width: 600px;
+    border-radius: 3px;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+}
+
+.card .thumbnail_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card .info_wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.card .info_wrap .info_button_wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.card .info_wrap .info_button_wrap button{
+    margin-right: 10px;
+}
+
+/* spinner */
+.lds-dual-ring {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}
+
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 5px;
+    border-radius: 50%;
+    border: 5px solid rgb(19, 120, 244);
+    border-color: rgb(19, 120, 244) transparent rgb(19, 120, 244) transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

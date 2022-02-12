@@ -1,0 +1,14 @@
+const Header = () => {
+	return `
+  <div class="header">
+    <h1><a href="/">포켓 규장각</a></h1>
+    <input id="query" placeholder="도서명"/>
+    <button class="searchBtn">검색</button>
+    <a href="/readinglist">읽기 목록</a>
+    <p>도서명을 검색하면 영도 도서관의 도서 소장 정보와 대출 상태를 확인할 수 있습니다.</p>
+    <p>대출 가능 여부는 조회일 기준 전날 대출 상태를 기준으로 합니다.</p>
+  </div>
+  `
+}
+
+export default Header
