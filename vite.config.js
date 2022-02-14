@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 
 import { createHtmlPlugin } from 'vite-plugin-html'
+import { ViteWebfontDownload } from 'vite-plugin-webfont-dl'
 
 export default defineConfig({
 	root: './src',
@@ -20,8 +21,12 @@ export default defineConfig({
 			inject: {
 				data: {
 					title: '포켓 규장각',
+					injectScript: `<script src="https://kit.fontawesome.com/b21e3700d5.js" crossorigin="anonymous"></script>`
 				}
 			}
-		})
+		}),
+		ViteWebfontDownload([
+			'https://fonts.googleapis.com/css2?family=Nanum+Myeongjo&family=Noto+Sans+KR&display=swap'
+		])
 	]
 })

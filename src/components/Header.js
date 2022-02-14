@@ -1,13 +1,17 @@
 const Header = () => {
 	return `
-  <div class="header">
-    <h1><a href="/">포켓 규장각</a></h1>
-    <input id="query" placeholder="도서명"/>
-    <button class="searchBtn">검색</button>
-    <a href="/readinglist">읽기 목록</a>
-    <p>도서명을 검색하면 영도 도서관의 도서 소장 정보와 대출 상태를 확인할 수 있습니다.</p>
-    <p>대출 가능 여부는 조회일 기준 전날 대출 상태를 기준으로 합니다.</p>
-  </div>
+  <header>
+    <h1 class="title"><a href="/">포켓 규장각</a></h1>
+    <div class="header-contents">
+      <div class="search_form">
+        <input id="query" placeholder="도서명" aria-label="도서명 검색"/>
+        <button class="btn search_btn">검색</button>
+      </div>
+      <nav>
+        <a class="reading_list" href="/readinglist">읽기 목록</a>
+      </nav>
+    </div>
+  </header>
   `
 }
 

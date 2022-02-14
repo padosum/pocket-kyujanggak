@@ -1,5 +1,10 @@
 const Footer = () => {
-	return `<a>Made by 🏝️ Padosum</a>`
+	return (
+		`<footer>
+  POCKET-KYUJANGGAK
+  </footer>`
+	)
+  
 }
 
 export default Footer  

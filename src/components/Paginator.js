@@ -3,7 +3,7 @@ export default function Paginator(props) {
 	const maxPage = 5
 	const booksPerPage = 10
 	const pagesCount = Math.ceil(pages / booksPerPage)
-
+	console.log(`currentPage`, currentPage)
 	let maxLeft = currentPage - Math.floor(maxPage / 2)
 	let maxRight = currentPage + Math.floor(maxPage / 2)
 
@@ -31,33 +31,44 @@ export default function Paginator(props) {
 		maxRight = pagesCount
 	}
 
-	const pagination = document.createElement('div')
+	const pagination = document.createElement('ul')
 	pagination.className = 'pagination'
 	
 	if (pagesCount >= maxPage) {
-		const first = document.createElement('button')
-		first.className = 'first'
+		const li = document.createElement('li')
+		const first = document.createElement('a')
+		first.className = 'first page_number'
 		first.onclick = handlePageChange
-		first.innerText = `first`
-		pagination.appendChild(first)
+		first.value = 1
+		first.innerHTML = `<i class="fa-solid fa-angles-left"></i>`
+		li.appendChild(first)
+		pagination.appendChild(li)
 	}
 	
-  
+	console.log(`maxLeft`, maxLeft, `maxRight`, maxRight)
 	for (let i = maxLeft; i <= maxRight; i++) {
-		const button = document.createElement('button')
-		button.onclick = handlePageChange
-		button.innerText = i
-		button.value = i
-		pagination.appendChild(button)
+		const li = document.createElement('li')
+		const pageNumber = document.createElement('a')
+		pageNumber.classList.add('page_number')
+		if (currentPage === i) {
+			pageNumber.classList.add('active')
+		}
+		pageNumber.onclick = handlePageChange
+		pageNumber.innerText = i
+		pageNumber.value = i
+		li.appendChild(pageNumber)
+		pagination.appendChild(li)
 	}
   
 	if (pagesCount >= maxPage) {
-		const last = document.createElement('button')
-		last.className = 'last'
+		const li = document.createElement('li')
+		const last = document.createElement('a')
+		last.className = 'last page_number'
 		last.onclick = handlePageChange
-		last.innerText = `last`
+		last.innerHTML = `<i class="fa-solid fa-angles-right"></i>`
 		last.value = pagesCount
-		pagination.appendChild(last)
+		li.appendChild(last)
+		pagination.appendChild(li)
 	}
   
 	return pagination 
