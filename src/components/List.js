@@ -1,7 +1,6 @@
 import Card from './Card'
-const tag = `List`
 
-export default function List(books, isReadingList) {
+export default function List(books) {
   
 	let list = ``
 	books.forEach(el => {
@@ -17,7 +16,7 @@ export default function List(books, isReadingList) {
 			loanAvailable,
 			updated,
 			is_listed
-		}, isReadingList) 
+		}) 
 	})
   
 	return list

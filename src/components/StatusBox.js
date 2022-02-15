@@ -1,4 +1,4 @@
-export default function MetadataBox(props) {
+export default function StatusBox(props) {
 	return (
 		`<div class="message">
         ${props.hasBook === 'Y' ? `<span class="color-success"><i class="fa fa-regular fa-face-grin-beam"></i> 소장</span>`

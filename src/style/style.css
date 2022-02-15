@@ -54,6 +54,7 @@ header .header-contents .search_form {
 }
 
 header .header-contents .search_form input {
+    font-size: 16px;
     margin-right: 10px;
 }
 
@@ -122,13 +123,15 @@ main .information {
     border: solid 1px rgb(0, 62, 230);
     box-shadow: rgb(0 48 179) 5px 6px 0px;
     padding: 16px 16px;
+    line-height: 1.5;
+    word-break: keep-all;
 }
 
 .list {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
+    width: 80%;
 }
 
 .card {
@@ -145,7 +148,7 @@ main .information {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 2rem;
 }
 
 .card .thumbnail_wrap img {
@@ -160,15 +163,22 @@ main .information {
     justify-content: space-between;
 }
 
-.card .info_wrap .title {
+.card .info_wrap .title_wrap {
+    display: flex;
+    justify-content: space-between;
     font-size: 22px;
     margin-top: 18px;
     color: rgb(17, 17, 17);
     font-weight: 600;
+    padding: 0px 16px;
 }
 
-.card .info_wrap .title a {
-    font-size: 14px;
+.card .info_wrap .title_wrap .title {
+    word-break: keep-all;
+}
+
+.card .info_wrap .title_wrap a {
+    font-size: 13px;
 }
 
 .card .info_wrap .authors_wrap {
@@ -183,6 +193,8 @@ main .information {
 
 .card .info_wrap .description {
     padding: 0px 16px;
+    line-height: 1.5;
+    word-break: keep-all;
 }
 
 .card .info_wrap .message {
@@ -248,11 +260,7 @@ main .information {
     display: inline-block;
 }
 
-.pagination li {
-    display: inline;
-}
-
-.pagination li a {
+.pagination a {
     padding: 2px 8px;
     border-radius: 3px;
     border: 1px solid rgb(0, 62, 230);
@@ -263,7 +271,7 @@ main .information {
     cursor: pointer;
 }
 
-.pagination li a.active {
+.pagination a.active {
     color: #fff;
     background-color: rgb(0, 62, 230);
     /* border: 1px solid #fff; */
@@ -278,8 +286,39 @@ footer {
     color: rgb(153, 153, 153);
 }
 
-@media screen and (max-width: 1024px) {
+
+@media screen and (max-width: 1280px) {
     .list {
         width: 100%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    header .header-contents {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 20px 0%;
+    }
+
+    header .header-contents .search_form {
+        width: 100%;
+    }
+
+    header .header-contents .search_form input {
+        width: 100%;
+        margin: 1rem;
+    }
+
+    header .header-contents .search_form .search_btn {
+        display: none;
+    }
+
+    header .header-contents .search_form input {
+        margin-right: 3px;
+    }
+
+    main .card {
+        flex-direction: column;
     }
 }

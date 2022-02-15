@@ -1,6 +1,6 @@
 import { getToday, cutString } from '../helpers/utils'
-import MetadataBox from './MetadataBox'
-export default function Card(props, isReadingList) {
+import StatusBox from './StatusBox'
+export default function Card(props) {
 	const { authors, thumbnail, title, contents, url, updated, isbn, hasBook, is_listed } = props
 	const authorsList = Array.isArray(authors) ? authors.reduce((prev, curr) => prev += `, ${curr}`) : authors
 	const cutDescription = contents.length > 200
@@ -12,8 +12,15 @@ export default function Card(props, isReadingList) {
         <img src="${thumbnail}"/>
       </div>
       <div class="info_wrap">
-        <div class="title">『${title}』<a href="${url}" target="_blank"> <i class="fa fa-solid fa-link" style="margin-left: -10px"></i></a>
+        <div class="title_wrap">
+          <span class="title">
+            ${title}
+          </span>
+          <a href="${url}" target="_blank">
+              <i class="fa fa-solid fa-link" style="margin-left: -10px"></i>
+          </a>
         </div>
+        
         <div class="authors_wrap">
           <span class="authors">${authorsList}</span> 저
         </div>
@@ -21,7 +28,7 @@ export default function Card(props, isReadingList) {
           <p>${description}</p>
         </div>
         ${
-		updated === getToday() ? MetadataBox(props)
+		updated === getToday() ? StatusBox(props)
 			: `<div class="message" data-isbn="${isbn}"><span><i class="fa-solid fa-magnifying-glass"></i> 확인중입니다...</span> <span class="lds-dual-ring"></span>
         </div>`}
         <div class="info_button_wrap">

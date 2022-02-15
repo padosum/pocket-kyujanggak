@@ -1,5 +1,5 @@
 export default function Paginator(props) {
-	const {handlePageChange, pages, currentPage, isPageEnd} = props
+	const { handlePageChange, pages, currentPage } = props
 	const maxPage = 5
 	const booksPerPage = 10
 	const pagesCount = Math.ceil(pages / booksPerPage)
@@ -31,23 +31,20 @@ export default function Paginator(props) {
 		maxRight = pagesCount
 	}
 
-	const pagination = document.createElement('ul')
+	const pagination = document.createElement('div')
 	pagination.className = 'pagination'
 	
 	if (pagesCount >= maxPage) {
-		const li = document.createElement('li')
 		const first = document.createElement('a')
 		first.className = 'first page_number'
 		first.onclick = handlePageChange
 		first.value = 1
 		first.innerHTML = `<i class="fa-solid fa-angles-left"></i>`
-		li.appendChild(first)
-		pagination.appendChild(li)
+		pagination.appendChild(first)
 	}
 	
 	console.log(`maxLeft`, maxLeft, `maxRight`, maxRight)
 	for (let i = maxLeft; i <= maxRight; i++) {
-		const li = document.createElement('li')
 		const pageNumber = document.createElement('a')
 		pageNumber.classList.add('page_number')
 		if (currentPage === i) {
@@ -56,19 +53,16 @@ export default function Paginator(props) {
 		pageNumber.onclick = handlePageChange
 		pageNumber.innerText = i
 		pageNumber.value = i
-		li.appendChild(pageNumber)
-		pagination.appendChild(li)
+		pagination.appendChild(pageNumber)
 	}
   
 	if (pagesCount >= maxPage) {
-		const li = document.createElement('li')
 		const last = document.createElement('a')
 		last.className = 'last page_number'
 		last.onclick = handlePageChange
 		last.innerHTML = `<i class="fa-solid fa-angles-right"></i>`
 		last.value = pagesCount
-		li.appendChild(last)
-		pagination.appendChild(li)
+		pagination.appendChild(last)
 	}
   
 	return pagination 
