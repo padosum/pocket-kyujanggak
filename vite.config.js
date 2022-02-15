@@ -6,6 +6,7 @@ import { ViteWebfontDownload } from 'vite-plugin-webfont-dl'
 export default defineConfig({
 	root: './src',
 	server: {
+		host: true,
 		proxy: {
 			'/api/bookExist': {
 				target: 'http://data4library.kr',
