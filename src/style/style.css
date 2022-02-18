@@ -25,25 +25,52 @@ a:hover, a:active, a:visited {
 }
 
 header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 120px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
-    padding-top: 20px;
     background-color: #fff;
     border-bottom: 1px solid #003ee6;
+    padding: 10px 0px;
+    z-index: 1;
+}
+
+.header_img_wrap {
+    width: 100%;
+    height: 100px;
+    padding-top: 30px;
+    background-color: #fff;
+}
+
+.header_img {
+    background: url('../assets/header.svg') no-repeat center center;
+    height: 100%;
+    width: 100%;
+}
+
+header .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    border: 1px solid rgb(0, 62, 230);
+    box-shadow: rgb(0 48 179) 5px 6px 0px;
+    padding: 0.3rem;
 }
 
 header .title a {
     font-family: 'Nanum Myeongjo', serif;
-    font-size: 30px;
+    font-size: 1.4rem;
     color: rgb(0, 62, 230);
 }
 
 header .header-contents {
     display: flex;
     justify-content: center;
-    padding: 20px 15%;
+    padding: 0px 15%;
 }
 
 header .header-contents .search_form {
@@ -107,7 +134,7 @@ main {
     flex-direction: column;
     align-items: center;
     background-color: #FAFAFA;
-    padding: 45px;
+    padding: 0 45px 45px 45px;
 }
 
 main h2 {
@@ -161,6 +188,7 @@ main .information {
     width: 100%;
     flex-direction: column;
     justify-content: space-between;
+    overflow: hidden;
 }
 
 .card .info_wrap .title_wrap {
@@ -196,6 +224,17 @@ main .information {
     line-height: 1.5;
     word-break: keep-all;
 }
+
+/* .card .info_wrap .description p {
+    display: -webkit-box;
+    max-width: 100%;
+    line-height: 1.2em;
+    height: 3.6em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+} */
 
 .card .info_wrap .message {
     flex: 1 1 0%;
@@ -294,20 +333,25 @@ footer {
 }
 
 @media screen and (max-width: 768px) {
-    header .header-contents {
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        padding: 20px 0%;
+    header .header_img_wrap {
+        height: 30%;
     }
 
-    header .header-contents .search_form {
+    header .header-contents {
+        /* flex-direction: column; */
+        align-items: center;
         width: 100%;
+        padding: 0px 0px;
+    }
+
+
+    header .header-contents .search_form {
+        width: 70%;
     }
 
     header .header-contents .search_form input {
         width: 100%;
-        margin: 1rem;
+        margin: 0.1rem;
     }
 
     header .header-contents .search_form .search_btn {

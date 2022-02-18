@@ -3,8 +3,8 @@ import StatusBox from './StatusBox'
 export default function Card(props) {
 	const { authors, thumbnail, title, contents, url, updated, isbn, hasBook, is_listed } = props
 	const authorsList = Array.isArray(authors) ? authors.reduce((prev, curr) => prev += `, ${curr}`) : authors
-	const cutDescription = contents.length > 200
-	const description = cutDescription ? cutString(contents, 200) : contents
+	const cutDescription = contents.length > 100
+	const description = cutDescription ? cutString(contents, 100) : contents
   
 	return (
 		`<div class="card">
