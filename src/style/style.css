@@ -202,6 +202,7 @@ main .information {
 }
 
 .card .info_wrap .title_wrap .title {
+    width: 95%;
     word-break: keep-all;
 }
 
