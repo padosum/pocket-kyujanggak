@@ -2,8 +2,9 @@ export default function Paginator(props) {
 	const { handlePageChange, pages, currentPage } = props
 	const maxPage = 5
 	const booksPerPage = 10
-	const pagesCount = Math.ceil(pages / booksPerPage)
-	console.log(`currentPage`, currentPage)
+	//* api 호출 최댓값 100페이지
+	const pagesCount = Math.ceil(pages / booksPerPage) > 100 ? 100 : Math.ceil(pages/booksPerPage)
+	
 	let maxLeft = currentPage - Math.floor(maxPage / 2)
 	let maxRight = currentPage + Math.floor(maxPage / 2)
 
@@ -37,8 +38,7 @@ export default function Paginator(props) {
 	if (pagesCount >= maxPage) {
 		const first = document.createElement('a')
 		first.className = 'first page_number'
-		first.onclick = handlePageChange
-		first.value = 1
+		first.addEventListener('click', () => handlePageChange(1))
 		first.innerHTML = `<i class="fa-solid fa-angles-left"></i>`
 		pagination.appendChild(first)
 	}
@@ -50,18 +50,16 @@ export default function Paginator(props) {
 		if (currentPage === i) {
 			pageNumber.classList.add('active')
 		}
-		pageNumber.onclick = handlePageChange
+		pageNumber.addEventListener('click', () => handlePageChange(i))
 		pageNumber.innerText = i
-		pageNumber.value = i
 		pagination.appendChild(pageNumber)
 	}
   
 	if (pagesCount >= maxPage) {
 		const last = document.createElement('a')
 		last.className = 'last page_number'
-		last.onclick = handlePageChange
+		last.addEventListener('click', () => handlePageChange(pagesCount))
 		last.innerHTML = `<i class="fa-solid fa-angles-right"></i>`
-		last.value = pagesCount
 		pagination.appendChild(last)
 	}
   

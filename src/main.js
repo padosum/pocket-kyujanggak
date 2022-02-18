@@ -12,12 +12,7 @@ const tag = '[main]'
 let currentPage = 1
 let reRender = false 
 
-function handlePageChange({ path }) {
-	const anchor = path[0]
-	let page = Number(anchor.value)
-	if (Number.isNaN(page)) { // first, last button 
-		page = path[1].value
-	}
+function handlePageChange(page) {
 	if (currentPage !== page) reRender = true
 	currentPage = page 
 	reRender && init() 
@@ -79,7 +74,7 @@ const init = () => {
 			} else {
 				App().render(parseHTML(`<main>${query}에 대한 도서 검색 결과가 없습니다.</main>`))
 			}
-		}) 
+		}).catch(err => console.log(err))
 	} else if (window.location.pathname === '/readinglist') {
 		const readingList = (JSON.parse(localStorage.getItem('books')) ?? []).filter(book => book.is_listed)
 		const app = App({ updatedSearchedList: readingList  })
