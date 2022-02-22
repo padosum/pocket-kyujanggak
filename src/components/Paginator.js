@@ -43,7 +43,6 @@ export default function Paginator(props) {
 		pagination.appendChild(first)
 	}
 	
-	console.log(`maxLeft`, maxLeft, `maxRight`, maxRight)
 	for (let i = maxLeft; i <= maxRight; i++) {
 		const pageNumber = document.createElement('a')
 		pageNumber.classList.add('page_number')
