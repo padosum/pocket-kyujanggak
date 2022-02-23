@@ -2,51 +2,38 @@ import Header from './components/Header'
 import Foooter from './components/Footer'
 import StatusBox from './components/StatusBox'
 import parseHTML from './helpers/parse-html'
-import axios from 'axios'
 import Paginator from './components/Paginator'
 import store from './store/index'
 import { getToday, $ } from './helpers/utils'
 import { Notyf } from 'notyf'
 import 'notyf/notyf.min.css'
 import ButtonBox from './components/ButtonBox'
+import BookApi from './api'
 
 const getLibraryInfo = async (list) => {
-	console.time('promise')
-	const formatList = await Promise.all(
+	const formatList = await Promise.allSettled(
 		list.map(async (item) => { 
-			const isbn13 = item.isbn.split(' ')[1]
-			let response
-			try {
-				const authKey = import.meta.env.VITE_LIBRARY_API_KEY
-				response = await axios({
-					method: 'get',
-					url: '/api/bookExist',
-					params: {
-						authKey,
-						libCode: '121014', 
-						isbn13,
-						format: 'json',
-					},
-				})
-			} catch (err) {
-				return err
-			}
+			const isbn = item.isbn.split(' ')[1]
+			let response = await BookApi.getBookStatus(isbn)
 			return response
 		})
 	).then((results) => {
-		const existList = list.map((v, i) => {
-			const { hasBook, loanAvailable } =
-        results[i].data.response.error === undefined ? results[i].data.response.result : { hasBook: 'N', loanAvailable: 'N' }
-			return {
-				...v,
-				hasBook,
-				loanAvailable,
+		const existList = list.filter((v, i) => {
+			const { error, result } = results[i].value.response
+			if (results[i].status === 'fulfilled' && error === undefined) {
+				const { hasBook, loanAvailable } = result
+				return {
+					...v,
+					hasBook,
+					loanAvailable,
+				}
 			}
 		})
 		return existList
+	}).catch(err => {
+		console.error(err)
 	})
 
-	console.timeEnd('promise')
 	return formatList
 }
 
@@ -162,7 +149,7 @@ const checkBookStatus = (props) => {
 					}
 					statusBox.appendChild(parseHTML(StatusBox(response[i])))
 				}
-              
+            
 				const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest('div')
 				if (infoButtonWrap !== undefined) {
 					while (infoButtonWrap.hasChildNodes()) {
@@ -171,7 +158,9 @@ const checkBookStatus = (props) => {
 					infoButtonWrap.appendChild(parseHTML(ButtonBox(response[i])))
 				}
 			})
-		})
+		}).catch(err => {
+			console.error(err)
+		}) 
 	}
 }
 

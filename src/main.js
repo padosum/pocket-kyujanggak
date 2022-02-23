@@ -2,8 +2,8 @@ import App from './app'
 import SearchList from './components/SearchList'
 import ReadingList from './components/ReadingList'
 import parseHTML from './helpers/parse-html'
-import search from './search'
 import store from './store/index'
+import BookApi from './api'
 
 import './style/style.css'
 
@@ -22,16 +22,25 @@ const searchPage = () => {
 	const urlSearchParams = new URLSearchParams(window.location.search)
 	const params = Object.fromEntries(urlSearchParams.entries())
 	const query = params.q
+  
+	const search = async (query, page) => { 
+		try {
+			const response = await BookApi.getBookList({ query, page })
+			return response
+		} catch (err) {
+			console.error(err)
+		} 
+	}
     
 	// 책 검색 
-	search(query, currentPage).then(response => {
-		const pages = response.data.meta.total_count
-		const isPageEnd = response.data.meta.is_end
+	search(query, currentPage).then(data => {
+		const pages = data.meta.total_count
+		const isPageEnd = data.meta.is_end
       
 		if(pages > 0) {
 			const savedBooks = store.getLocalStorage()
 
-			let searchedList = response.data.documents
+			let searchedList = data.documents
 			let updatedSearchedList
       
 			// 저장된 데이터가 없으면 새로 저장하기 
@@ -66,7 +75,9 @@ const searchPage = () => {
 		} else {
 			App().render(parseHTML(`<main>${query}에 대한 도서 검색 결과가 없습니다.</main>`))
 		}
-	}).catch(err => console.log(err))
+	}).catch(() => {
+		App().render(parseHTML(`<main>도서 검색 중 오류가 발생했습니다.</main>`))
+	})
 }
 
 const readingListPage = () => {

@@ -15,7 +15,6 @@
     "vite-plugin-webfont-dl": "^1.0.9"
   },
   "dependencies": {
-    "axios": "^0.25.0",
     "notyf": "^3.10.0"
   }
 }
