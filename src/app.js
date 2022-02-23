@@ -60,68 +60,119 @@ const search = () => {
 	}
 }
 
+const toggleReadingList = (target) => {
+	const text = target.innerText
+	const isDeleted = text === '삭제하기'
+	let isConfirm = false
+	if (isDeleted) {
+		const confirmMessage = confirm('도서를 삭제하시겠습니까?')
+		isConfirm = confirmMessage
+	} else {
+		isConfirm = true
+	}
+
+	if (isConfirm) {
+		const notyf = new Notyf({
+			types: [
+				{
+					type: 'success',
+					background: 'blue',
+				},
+			],
+			dismissible: true,
+		})
+		const { isbn } = target.dataset
+		const savedBooks = getBooks()
+		const updatedBooks = savedBooks.map((book) => {
+			return book.isbn === isbn ? { ...book, is_listed: !isDeleted } : book
+		})
+        
+		setBooks(updatedBooks)
+
+		if (window.location.pathname === '/readinglist' && isDeleted) {
+			target.closest('.card').remove()
+		}
+		if (isDeleted) {
+			target.innerText = `읽기 목록에 담기`
+			notyf.success('읽기 목록에서 삭제되었습니다.')
+		} else {
+			target.innerText = `삭제하기`
+			notyf.success('읽기 목록에 담았습니다.')
+		}
+	}
+}
+
 const setEvent = () => {
 	const $query = $('#query') 
 	
+	$query.addEventListener('keypress', (e) => {
+		if (e.key === 'Enter' && $query.value.trim() !== '') {
+			search()
+		}
+		return
+	})
+  
 	document.body.addEventListener('click', (e) => {
 		const { target } = e
 
 		if (target.classList.contains('search_btn')) {
-			const query = $query.value.trim()
-			if (query !== '') {
+			if ($query.value.trim() !== '') {
 				search()
 			}
+			return
 		}
 		if (target.classList.contains('reading_btn')) {
-			const text = target.innerText
-			const isDeleted = text === '삭제하기'
-			let isConfirm = false
-			if (isDeleted) {
-				const confirmMessage = confirm('도서를 삭제하시겠습니까?')
-				isConfirm = confirmMessage
-			} else {
-				isConfirm = true
-			}
+			toggleReadingList(target)
+			return
+		}
+	})
+}
 
-			if (isConfirm) {
-				const notyf = new Notyf({
-					types: [
-						{
-							type: 'success',
-							background: 'blue',
-						},
-					],
-					dismissible: true,
-				})
-				const { isbn } = target.dataset
-				const savedBooks = getBooks()
-				const updatedBooks = savedBooks.map((book) => {
-					return book.isbn === isbn ? { ...book, is_listed: !isDeleted } : book
-				})
-        
-				setBooks(updatedBooks)
+const checkBookStatus = (props) => {
+	const { updatedSearchedList } = props
+	// update 날짜가 오늘이 아닌 경우 조회
+	const shouldUpdateList = updatedSearchedList.filter((book) => {
+		return book.updated !== getToday()
+	})
 
-				if (window.location.pathname === '/readinglist' && isDeleted) {
-					target.closest('.card').remove()
-				}
-				if (isDeleted) {
-					target.innerText = `읽기 목록에 담기`
-					notyf.success('읽기 목록에서 삭제되었습니다.')
+	// 대출 상태를 조회할 책 목록이 있다면
+	if (shouldUpdateList.length > 0) {
+		getLibraryInfo(shouldUpdateList).then((response) => {
+			let savedBooks = getBooks()
+
+			// 저장된 값을 현재 날짜로 업데이트 하기
+			const updatedBooks = savedBooks.map((book) => {
+				const idx = response.findIndex((b) => b.isbn === book.isbn)
+
+				if (idx !== -1) {
+					return { ...response[idx], updated: getToday() }
 				} else {
-					target.innerText = `삭제하기`
-					notyf.success('읽기 목록에 담았습니다.')
+					return book
 				}
-			}
-		}
-	})
-  
-	
-	$query.addEventListener('keypress', (e) => {
-		const query = $query.value.trim()
-		if (e.key === 'Enter' && query !== '') {
-			search()
-		}
-	})
+			})
+
+			setBooks(updatedBooks)
+
+			// update ui
+			response.forEach((v, i) => {
+				const statusBox = $(`div[data-isbn='${v.isbn}']`)
+				if (statusBox !== undefined) {
+					while (statusBox.hasChildNodes()) {
+						statusBox.removeChild(statusBox.lastChild)
+					}
+					statusBox.appendChild(parseHTML(StatusBox(response[i])))
+				}
+              
+				const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest('div')
+				if (infoButtonWrap !== undefined) {
+					while (infoButtonWrap.hasChildNodes()) {
+						infoButtonWrap.removeChild(infoButtonWrap.lastChild)
+					}
+					infoButtonWrap.appendChild(parseHTML(ButtonBox(response[i])))
+				}
+			})
+		})
+	}
 }
 
 export default function App(props) {
@@ -138,51 +189,7 @@ export default function App(props) {
 
 			// 대출 상태 조회하기
 			if (pathname !== '/' & props !== undefined) {
-				const { updatedSearchedList } = props
-				// update 날짜가 오늘이 아닌 경우 조회
-				const shouldUpdateList = updatedSearchedList.filter((book) => {
-					return book.updated !== getToday()
-				})
-
-				// 대출 상태를 조회할 책 목록이 있다면
-				if (shouldUpdateList.length > 0) {
-					getLibraryInfo(shouldUpdateList).then((response) => {
-						let savedBooks = getBooks()
-
-						// 저장된 값을 현재 날짜로 업데이트 하기
-						const updatedBooks = savedBooks.map((book) => {
-							const idx = response.findIndex((b) => b.isbn === book.isbn)
-
-							if (idx !== -1) {
-								return { ...response[idx], updated: getToday() }
-							} else {
-								return book
-							}
-						})
-
-						setBooks(updatedBooks)
-
-						// update ui
-						response.forEach((v, i) => {
-							const statusBox = $(`div[data-isbn='${v.isbn}']`)
-							if (statusBox !== undefined) {
-								while (statusBox.hasChildNodes()) {
-									statusBox.removeChild(statusBox.lastChild)
-								}
-								statusBox.appendChild(parseHTML(StatusBox(response[i])))
-							}
-              
-							const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest('div')
-							if (infoButtonWrap !== undefined) {
-								while (infoButtonWrap.hasChildNodes()) {
-									infoButtonWrap.removeChild(infoButtonWrap.lastChild)
-								}
-								infoButtonWrap.appendChild(parseHTML(ButtonBox(response[i])))
-							}
-						})
-					})
-				}
-        
+				checkBookStatus(props)
 				$('main').appendChild(Paginator(props))
 			}
 			el.appendChild(parseHTML(Foooter()))
