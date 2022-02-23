@@ -5,7 +5,7 @@ import parseHTML from './helpers/parse-html'
 import axios from 'axios'
 import Paginator from './components/Paginator'
 import { getBooks, setBooks } from './storage'
-import { getToday } from './helpers/utils'
+import { getToday, $ } from './helpers/utils'
 import { Notyf } from 'notyf'
 import 'notyf/notyf.min.css'
 import ButtonBox from './components/ButtonBox'
@@ -51,8 +51,7 @@ const getLibraryInfo = async (list) => {
 }
 
 const search = () => {
-	const elQuery = document.querySelector('#query')
-	const query = elQuery.value
+	const query = $('#query').value
 
 	if ('URLSearchParams' in window) {
 		const searchParams = new URLSearchParams(window.location.search)
@@ -62,14 +61,13 @@ const search = () => {
 }
 
 const setEvent = () => {
-	const bookName = document.querySelector('#query') 
+	const $query = $('#query') 
 	
-  
 	document.body.addEventListener('click', (e) => {
 		const { target } = e
 
 		if (target.classList.contains('search_btn')) {
-			const query = bookName.value.trim()
+			const query = $query.value.trim()
 			if (query !== '') {
 				search()
 			}
@@ -118,8 +116,8 @@ const setEvent = () => {
 	})
   
 	
-	bookName.addEventListener('keypress', (e) => {
-		const query = bookName.value.trim()
+	$query.addEventListener('keypress', (e) => {
+		const query = $query.value.trim()
 		if (e.key === 'Enter' && query !== '') {
 			search()
 		}
@@ -166,9 +164,7 @@ export default function App(props) {
 
 						// update ui
 						response.forEach((v, i) => {
-							const statusBox = document.querySelector(
-								`div[data-isbn='${v.isbn}']`
-							)
+							const statusBox = $(`div[data-isbn='${v.isbn}']`)
 							if (statusBox !== undefined) {
 								while (statusBox.hasChildNodes()) {
 									statusBox.removeChild(statusBox.lastChild)
@@ -176,7 +172,7 @@ export default function App(props) {
 								statusBox.appendChild(parseHTML(StatusBox(response[i])))
 							}
               
-							const infoButtonWrap = document.querySelector(`button[data-isbn='${v.isbn}']`).closest('div')
+							const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest('div')
 							if (infoButtonWrap !== undefined) {
 								while (infoButtonWrap.hasChildNodes()) {
 									infoButtonWrap.removeChild(infoButtonWrap.lastChild)
@@ -186,8 +182,8 @@ export default function App(props) {
 						})
 					})
 				}
-				const main = document.querySelector('main')
-				main.appendChild(Paginator(props))
+        
+				$('main').appendChild(Paginator(props))
 			}
 			el.appendChild(parseHTML(Foooter()))
 		},

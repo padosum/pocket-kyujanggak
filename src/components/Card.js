@@ -2,7 +2,7 @@ import { getToday, cutString } from '../helpers/utils'
 import StatusBox from './StatusBox'
 import ButtonBox from './ButtonBox'
 export default function Card(props) {
-	const { authors, thumbnail, title, contents, url, updated, isbn, hasBook } = props
+	const { authors, thumbnail, title, contents, url, updated, isbn } = props
 	const authorsList = Array.isArray(authors) ? authors.reduce((prev, curr) => prev += `, ${curr}`) : authors
 	const cutDescription = contents.length > 100
 	const description = cutDescription ? cutString(contents, 100) : contents
