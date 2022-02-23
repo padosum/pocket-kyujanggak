@@ -8,6 +8,7 @@ import { getBooks, setBooks } from './storage'
 import { getToday } from './helpers/utils'
 import { Notyf } from 'notyf'
 import 'notyf/notyf.min.css'
+import ButtonBox from './components/ButtonBox'
 
 const getLibraryInfo = async (list) => {
 	console.time('promise')
@@ -165,14 +166,22 @@ export default function App(props) {
 
 						// update ui
 						response.forEach((v, i) => {
-							const metabox = document.querySelector(
+							const statusBox = document.querySelector(
 								`div[data-isbn='${v.isbn}']`
 							)
-							if (metabox !== undefined) {
-								while (metabox.hasChildNodes()) {
-									metabox.removeChild(metabox.lastChild)
+							if (statusBox !== undefined) {
+								while (statusBox.hasChildNodes()) {
+									statusBox.removeChild(statusBox.lastChild)
 								}
-								metabox.appendChild(parseHTML(StatusBox(response[i])))
+								statusBox.appendChild(parseHTML(StatusBox(response[i])))
+							}
+              
+							const infoButtonWrap = document.querySelector(`button[data-isbn='${v.isbn}']`).closest('div')
+							if (infoButtonWrap !== undefined) {
+								while (infoButtonWrap.hasChildNodes()) {
+									infoButtonWrap.removeChild(infoButtonWrap.lastChild)
+								}
+								infoButtonWrap.appendChild(parseHTML(ButtonBox(response[i])))
 							}
 						})
 					})
