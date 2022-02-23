@@ -3,7 +3,7 @@ import SearchList from './components/SearchList'
 import ReadingList from './components/ReadingList'
 import parseHTML from './helpers/parse-html'
 import search from './search'
-import { getBooks, setBooks } from './storage'
+import store from './store/index'
 
 import './style/style.css'
 
@@ -29,14 +29,14 @@ const searchPage = () => {
 		const isPageEnd = response.data.meta.is_end
       
 		if(pages > 0) {
-			const savedBooks = getBooks()
+			const savedBooks = store.getLocalStorage()
 
 			let searchedList = response.data.documents
 			let updatedSearchedList
       
 			// 저장된 데이터가 없으면 새로 저장하기 
 			if (savedBooks === null) {
-				setBooks(searchedList)
+				store.setLocalStorage(searchedList)
 				updatedSearchedList = searchedList
 			}
 			// 이미 저장된 데이터가 있다면 
@@ -57,7 +57,7 @@ const searchPage = () => {
 				})
         
 				const newSaveList = [...savedBooks, ...newBooks]
-				setBooks(newSaveList)
+				store.setLocalStorage(newSaveList)
 			}
         
 			const app = App({ updatedSearchedList, pages, handlePageChange, currentPage, isPageEnd })
@@ -70,7 +70,7 @@ const searchPage = () => {
 }
 
 const readingListPage = () => {
-	const readingList = (JSON.parse(localStorage.getItem('books')) ?? []).filter(book => book.is_listed)
+	const readingList = (store.getLocalStorage() ?? []).filter(book => book.is_listed)
 	const app = App({ updatedSearchedList: readingList  })
 	const component = parseHTML(`<main>${ReadingList(readingList)}</main>`)
 	app.render(component)

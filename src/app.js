@@ -4,7 +4,7 @@ import StatusBox from './components/StatusBox'
 import parseHTML from './helpers/parse-html'
 import axios from 'axios'
 import Paginator from './components/Paginator'
-import { getBooks, setBooks } from './storage'
+import store from './store/index'
 import { getToday, $ } from './helpers/utils'
 import { Notyf } from 'notyf'
 import 'notyf/notyf.min.css'
@@ -82,12 +82,12 @@ const toggleReadingList = (target) => {
 			dismissible: true,
 		})
 		const { isbn } = target.dataset
-		const savedBooks = getBooks()
+		const savedBooks = store.getLocalStorage()
 		const updatedBooks = savedBooks.map((book) => {
 			return book.isbn === isbn ? { ...book, is_listed: !isDeleted } : book
 		})
         
-		setBooks(updatedBooks)
+		store.setLocalStorage(updatedBooks)
 
 		if (window.location.pathname === '/readinglist' && isDeleted) {
 			target.closest('.card').remove()
@@ -138,7 +138,7 @@ const checkBookStatus = (props) => {
 	// 대출 상태를 조회할 책 목록이 있다면
 	if (shouldUpdateList.length > 0) {
 		getLibraryInfo(shouldUpdateList).then((response) => {
-			let savedBooks = getBooks()
+			let savedBooks = store.getLocalStorage()
 
 			// 저장된 값을 현재 날짜로 업데이트 하기
 			const updatedBooks = savedBooks.map((book) => {
@@ -151,7 +151,7 @@ const checkBookStatus = (props) => {
 				}
 			})
 
-			setBooks(updatedBooks)
+			store.setLocalStorage(updatedBooks)
 
 			// update ui
 			response.forEach((v, i) => {
