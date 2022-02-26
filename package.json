@@ -9,6 +9,7 @@
   "devDependencies": {
     "eslint": "^8.8.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-import": "^2.25.4",
     "vite": "^2.7.2",
     "vite-plugin-html": "^3.0.6",
