@@ -11,36 +11,44 @@ import ButtonBox from './components/ButtonBox'
 import BookApi from './api'
 
 const getLibraryInfo = async (list) => {
-  return await Promise.allSettled(
-    // 도서 목록의 소장여부/대출상태 조회하기
-    list.map(async ({ isbn }) => {
-      const [, isbn13] = isbn.split(' ')
-      return await BookApi.getBookStatus(isbn13)
-    })
-  )
-    .then((results) => {
-      return list.filter((v, i) => {
-        const {
-          status,
-          value: {
-            response: { error, result },
-          },
-        } = results[i]
+  return list.map(async ({ isbn }) => {
+    const [, isbn13] = isbn.split(' ')
+    const p = await BookApi.getBookStatus(isbn13)
+    return p
+  })
+  // return await Promise.allSettled(
+  //   // 도서 목록의 소장여부/대출상태 조회하기
+  //   list.map(async ({ isbn }) => {
+  //     const [, isbn13] = isbn.split(' ')
+  //     const p = await BookApi.getBookStatus(isbn13)
+  //     console.log(p.response)
+  //     // renderBookStatus(response)
+  //     return p
+  //   })
+  // )
+  //   .then((results) => {
+  //     return list.filter((v, i) => {
+  //       const {
+  //         status,
+  //         value: {
+  //           response: { error, result },
+  //         },
+  //       } = results[i]
 
-        // api로 가져온 도서의 소장여부/대출상태 업데이트
-        if (error === undefined && status === 'fulfilled') {
-          const { hasBook, loanAvailable } = result
-          return {
-            ...v,
-            hasBook,
-            loanAvailable,
-          }
-        }
-      })
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+  //       // api로 가져온 도서의 소장여부/대출상태 업데이트
+  //       if (error === undefined && status === 'fulfilled') {
+  //         const { hasBook, loanAvailable } = result
+  //         return {
+  //           ...v,
+  //           hasBook,
+  //           loanAvailable,
+  //         }
+  //       }
+  //     })
+  //   })
+  //   .catch((err) => {
+  //     console.error(err)
+  //   })
 }
 
 const search = () => {
@@ -131,56 +139,96 @@ const setEvent = () => {
   })
 }
 
-const renderBookStatus = (books) => {
+const renderBookStatus = (book) => {
   // update ui
-  books.forEach((v, i) => {
-    const statusBox = $(`div[data-isbn='${v.isbn}']`)
-    if (statusBox !== undefined) {
-      while (statusBox.hasChildNodes()) {
-        statusBox.removeChild(statusBox.lastChild)
-      }
-      statusBox.appendChild(parseHTML(StatusBox(books[i])))
+  const statusBox = $(`div[data-isbn='${book.isbn}']`)
+  if (statusBox !== undefined) {
+    while (statusBox.hasChildNodes()) {
+      statusBox.removeChild(statusBox.lastChild)
     }
+    statusBox.appendChild(parseHTML(StatusBox(book)))
+  }
+  const infoButtonWrap = $(`button[data-isbn='${book.isbn}']`).closest('div')
+  if (infoButtonWrap !== undefined) {
+    while (infoButtonWrap.hasChildNodes()) {
+      infoButtonWrap.removeChild(infoButtonWrap.lastChild)
+    }
+    infoButtonWrap.appendChild(parseHTML(ButtonBox(book)))
+  }
 
-    const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest('div')
-    if (infoButtonWrap !== undefined) {
-      while (infoButtonWrap.hasChildNodes()) {
-        infoButtonWrap.removeChild(infoButtonWrap.lastChild)
-      }
-      infoButtonWrap.appendChild(parseHTML(ButtonBox(books[i])))
-    }
-  })
+  // books.forEach((v, i) => {
+  //   const statusBox = $(`div[data-isbn='${v.isbn}']`)
+  //   if (statusBox !== undefined) {
+  //     while (statusBox.hasChildNodes()) {
+  //       statusBox.removeChild(statusBox.lastChild)
+  //     }
+  //     statusBox.appendChild(parseHTML(StatusBox(books[i])))
+  //   }
+  //   const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest('div')
+  //   if (infoButtonWrap !== undefined) {
+  //     while (infoButtonWrap.hasChildNodes()) {
+  //       infoButtonWrap.removeChild(infoButtonWrap.lastChild)
+  //     }
+  //     infoButtonWrap.appendChild(parseHTML(ButtonBox(books[i])))
+  //   }
+  // })
 }
 
 const updateBookStatus = (updatedBooks) => {
   let savedBooks = store.getLocalStorage()
 
   return savedBooks.map((book) => {
-    const idx = updatedBooks.findIndex((b) => b.isbn === book.isbn)
-
-    if (idx !== -1) {
-      return { ...updatedBooks[idx], updated: getToday() }
-    } else {
-      return book
-    }
+    return book.isbn === updatedBooks.isbn
+      ? { ...updatedBooks, updated: getToday() }
+      : book
   })
+  // let savedBooks = store.getLocalStorage()
+
+  // return savedBooks.map((book) => {
+  //   const idx = updatedBooks.findIndex((b) => b.isbn === book.isbn)
+
+  //   if (idx !== -1) {
+  //     return { ...updatedBooks[idx], updated: getToday() }
+  //   } else {
+  //     return book
+  //   }
+  // })
 }
 
 const checkBookStatus = ({ bookList }) => {
   // update 날짜가 오늘이 아닌 경우 조회
-  const shouldUpdateList = bookList.filter((book) => {
+  let shouldUpdateList = bookList.filter((book) => {
     return book.updated !== getToday()
   })
-
   // 대출 상태를 조회할 책 목록이 있다면
   if (shouldUpdateList.length > 0) {
     getLibraryInfo(shouldUpdateList)
       .then((response) => {
-        // 저장된 값을 현재 날짜로 업데이트 하기
-        const updatedBooks = updateBookStatus(response)
-        store.setLocalStorage(updatedBooks)
+        response.map((item) => {
+          item.then((result) => {
+            shouldUpdateList.forEach((v) => {
+              const [, isbn13] = v.isbn.split(' ')
+              if (isbn13 !== result.response.request.isbn13) {
+                return
+              }
+              const { hasBook, loanAvailable } = result.response.result
+              renderBookStatus({
+                ...v,
+                hasBook,
+                loanAvailable,
+              })
 
-        renderBookStatus(response)
+              // 저장된 값을 현재 날짜로 업데이트 하기
+              store.setLocalStorage(
+                updateBookStatus({
+                  ...v,
+                  hasBook,
+                  loanAvailable,
+                })
+              )
+            })
+          })
+        })
       })
       .catch((err) => {
         console.error(err)
@@ -202,7 +250,9 @@ export default function App(props) {
 
       // 대출 상태 조회하기
       if ((window.location.pathname !== '/') & (props !== undefined)) {
+        console.time('checkBookStatus')
         checkBookStatus(props)
+        console.timeEnd('checkBookStatus')
         $('main').appendChild(Paginator(props))
       }
       $app.appendChild(parseHTML(Foooter()))
