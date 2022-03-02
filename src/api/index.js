@@ -26,7 +26,6 @@ const BookApi = {
   async getBookStatus(isbn13) {
     const authKey = import.meta.env.VITE_LIBRARY_API_KEY
     const libCode = '121014'
-    console.log(`request`)
     return request(URLS.BookStatus, {
       authKey,
       libCode,
