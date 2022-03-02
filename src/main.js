@@ -6,6 +6,7 @@ import store from './store/index'
 import BookApi from './api'
 
 import './style/style.css'
+import { getToday } from './helpers/utils'
 
 let currentPage = 1
 let reRender = false
@@ -112,7 +113,16 @@ const readingListPage = () => {
   app.render(component)
 }
 
+const cleanSavedBooks = () => {
+  if (store.getUpdatedDate() !== getToday()) {
+    store.clearLocalStorage()
+    store.setUpdateDate()
+  }
+}
+
 const init = () => {
+  cleanSavedBooks()
+
   if (window.location.search) {
     searchPage()
   } else if (window.location.pathname === '/readinglist') {
