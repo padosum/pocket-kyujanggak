@@ -10,45 +10,35 @@ import 'notyf/notyf.min.css'
 import ButtonBox from './components/ButtonBox'
 import BookApi from './api'
 
-const getLibraryInfo = async (list) => {
-  return list.map(async ({ isbn }) => {
-    const [, isbn13] = isbn.split(' ')
-    const p = await BookApi.getBookStatus(isbn13)
-    return p
-  })
-  // return await Promise.allSettled(
-  //   // 도서 목록의 소장여부/대출상태 조회하기
-  //   list.map(async ({ isbn }) => {
-  //     const [, isbn13] = isbn.split(' ')
-  //     const p = await BookApi.getBookStatus(isbn13)
-  //     console.log(p.response)
-  //     // renderBookStatus(response)
-  //     return p
-  //   })
-  // )
-  //   .then((results) => {
-  //     return list.filter((v, i) => {
-  //       const {
-  //         status,
-  //         value: {
-  //           response: { error, result },
-  //         },
-  //       } = results[i]
+const getLibraryInfo = (list) => {
+  const bookMap = new Map()
+  list.map(async (book) => {
+    const [, isbn13] = book.isbn.split(' ')
+    bookMap.set(isbn13, book)
+    const { response } = await BookApi.getBookStatus(isbn13)
+    if (response.error) {
+      console.error(response)
+      return
+    }
 
-  //       // api로 가져온 도서의 소장여부/대출상태 업데이트
-  //       if (error === undefined && status === 'fulfilled') {
-  //         const { hasBook, loanAvailable } = result
-  //         return {
-  //           ...v,
-  //           hasBook,
-  //           loanAvailable,
-  //         }
-  //       }
-  //     })
-  //   })
-  //   .catch((err) => {
-  //     console.error(err)
-  //   })
+    const { hasBook, loanAvailable } = response.result
+
+    // 도서 상태 ui 업데이트
+    renderBookStatus({
+      ...bookMap.get(isbn13),
+      hasBook,
+      loanAvailable,
+    })
+
+    // 도서 상태 정보 저장
+    store.setLocalStorage(
+      updateBookStatus({
+        ...bookMap.get(isbn13),
+        hasBook,
+        loanAvailable,
+      })
+    )
+  })
 }
 
 const search = () => {
@@ -142,6 +132,7 @@ const setEvent = () => {
 const renderBookStatus = (book) => {
   // update ui
   const statusBox = $(`div[data-isbn='${book.isbn}']`)
+  console.log(`statusBox`, book.isbn, statusBox)
   if (statusBox !== undefined) {
     while (statusBox.hasChildNodes()) {
       statusBox.removeChild(statusBox.lastChild)
@@ -155,23 +146,6 @@ const renderBookStatus = (book) => {
     }
     infoButtonWrap.appendChild(parseHTML(ButtonBox(book)))
   }
-
-  // books.forEach((v, i) => {
-  //   const statusBox = $(`div[data-isbn='${v.isbn}']`)
-  //   if (statusBox !== undefined) {
-  //     while (statusBox.hasChildNodes()) {
-  //       statusBox.removeChild(statusBox.lastChild)
-  //     }
-  //     statusBox.appendChild(parseHTML(StatusBox(books[i])))
-  //   }
-  //   const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest('div')
-  //   if (infoButtonWrap !== undefined) {
-  //     while (infoButtonWrap.hasChildNodes()) {
-  //       infoButtonWrap.removeChild(infoButtonWrap.lastChild)
-  //     }
-  //     infoButtonWrap.appendChild(parseHTML(ButtonBox(books[i])))
-  //   }
-  // })
 }
 
 const updateBookStatus = (updatedBooks) => {
@@ -182,17 +156,6 @@ const updateBookStatus = (updatedBooks) => {
       ? { ...updatedBooks, updated: getToday() }
       : book
   })
-  // let savedBooks = store.getLocalStorage()
-
-  // return savedBooks.map((book) => {
-  //   const idx = updatedBooks.findIndex((b) => b.isbn === book.isbn)
-
-  //   if (idx !== -1) {
-  //     return { ...updatedBooks[idx], updated: getToday() }
-  //   } else {
-  //     return book
-  //   }
-  // })
 }
 
 const checkBookStatus = ({ bookList }) => {
@@ -203,36 +166,6 @@ const checkBookStatus = ({ bookList }) => {
   // 대출 상태를 조회할 책 목록이 있다면
   if (shouldUpdateList.length > 0) {
     getLibraryInfo(shouldUpdateList)
-      .then((response) => {
-        response.map((item) => {
-          item.then((result) => {
-            shouldUpdateList.forEach((v) => {
-              const [, isbn13] = v.isbn.split(' ')
-              if (isbn13 !== result.response.request.isbn13) {
-                return
-              }
-              const { hasBook, loanAvailable } = result.response.result
-              renderBookStatus({
-                ...v,
-                hasBook,
-                loanAvailable,
-              })
-
-              // 저장된 값을 현재 날짜로 업데이트 하기
-              store.setLocalStorage(
-                updateBookStatus({
-                  ...v,
-                  hasBook,
-                  loanAvailable,
-                })
-              )
-            })
-          })
-        })
-      })
-      .catch((err) => {
-        console.error(err)
-      })
   }
 }
 
