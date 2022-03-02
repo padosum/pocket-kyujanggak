@@ -10,37 +10,6 @@ import 'notyf/notyf.min.css'
 import ButtonBox from './components/ButtonBox'
 import BookApi from './api'
 
-const getLibraryInfo = (list) => {
-  const bookMap = new Map()
-  list.map(async (book) => {
-    const [, isbn13] = book.isbn.split(' ')
-    bookMap.set(isbn13, book)
-    const { response } = await BookApi.getBookStatus(isbn13)
-    if (response.error) {
-      console.error(response)
-      return
-    }
-
-    const { hasBook, loanAvailable } = response.result
-
-    // 도서 상태 ui 업데이트
-    renderBookStatus({
-      ...bookMap.get(isbn13),
-      hasBook,
-      loanAvailable,
-    })
-
-    // 도서 상태 정보 저장
-    store.setLocalStorage(
-      updateBookStatus({
-        ...bookMap.get(isbn13),
-        hasBook,
-        loanAvailable,
-      })
-    )
-  })
-}
-
 const search = () => {
   if ('URLSearchParams' in window) {
     const searchParams = new URLSearchParams(window.location.search)
@@ -132,7 +101,6 @@ const setEvent = () => {
 const renderBookStatus = (book) => {
   // update ui
   const statusBox = $(`div[data-isbn='${book.isbn}']`)
-  console.log(`statusBox`, book.isbn, statusBox)
   if (statusBox !== undefined) {
     while (statusBox.hasChildNodes()) {
       statusBox.removeChild(statusBox.lastChild)
@@ -165,7 +133,36 @@ const checkBookStatus = ({ bookList }) => {
   })
   // 대출 상태를 조회할 책 목록이 있다면
   if (shouldUpdateList.length > 0) {
-    getLibraryInfo(shouldUpdateList)
+    const bookMap = new Map()
+    shouldUpdateList.map(async (book) => {
+      const [, isbn13] = book.isbn.split(' ')
+      bookMap.set(isbn13, book)
+
+      // 대출 상태 가져오기
+      const { response } = await BookApi.getBookStatus(isbn13)
+      if (response.error) {
+        console.error(response)
+        return
+      }
+
+      const { hasBook, loanAvailable } = response.result
+
+      // 도서 상태 ui 업데이트
+      renderBookStatus({
+        ...bookMap.get(isbn13),
+        hasBook,
+        loanAvailable,
+      })
+
+      // 도서 상태 정보 저장
+      store.setLocalStorage(
+        updateBookStatus({
+          ...bookMap.get(isbn13),
+          hasBook,
+          loanAvailable,
+        })
+      )
+    })
   }
 }
 
