@@ -11,17 +11,24 @@ import ButtonBox from './components/ButtonBox'
 import BookApi from './api'
 
 const getLibraryInfo = async (list) => {
-  const formatList = await Promise.allSettled(
-    list.map(async (item) => {
-      const isbn = item.isbn.split(' ')[1]
-      let response = await BookApi.getBookStatus(isbn)
-      return response
+  return await Promise.allSettled(
+    // 도서 목록의 소장여부/대출상태 조회하기
+    list.map(async ({ isbn }) => {
+      const [, isbn13] = isbn.split(' ')
+      return await BookApi.getBookStatus(isbn13)
     })
   )
     .then((results) => {
-      const existList = list.filter((v, i) => {
-        const { error, result } = results[i].value.response
-        if (results[i].status === 'fulfilled' && error === undefined) {
+      return list.filter((v, i) => {
+        const {
+          status,
+          value: {
+            response: { error, result },
+          },
+        } = results[i]
+
+        // api로 가져온 도서의 소장여부/대출상태 업데이트
+        if (error === undefined && status === 'fulfilled') {
           const { hasBook, loanAvailable } = result
           return {
             ...v,
@@ -30,13 +37,10 @@ const getLibraryInfo = async (list) => {
           }
         }
       })
-      return existList
     })
     .catch((err) => {
       console.error(err)
     })
-
-  return formatList
 }
 
 const search = () => {
@@ -47,46 +51,60 @@ const search = () => {
   }
 }
 
+const toggleBookData = (isbn) => {
+  const savedBooks = store.getLocalStorage()
+  return savedBooks.map((book) => {
+    return book.isbn === isbn ? { ...book, is_listed: !book.is_listed } : book
+  })
+}
+
+const removeReadingList = (isbn, cbFunc) => {
+  if (!confirm('도서를 삭제하시겠습니까?')) {
+    return
+  }
+  store.setLocalStorage(toggleBookData(isbn))
+  if (cbFunc) {
+    cbFunc()
+  }
+}
+
+const addReadingList = (isbn, cbFunc) => {
+  store.setLocalStorage(toggleBookData(isbn))
+  if (cbFunc) {
+    cbFunc()
+  }
+}
+
+const notyf = new Notyf({
+  types: [
+    {
+      type: 'success',
+      background: 'blue',
+    },
+  ],
+  dismissible: true,
+})
+
 const toggleReadingList = (target) => {
   const text = target.innerText
+  const { isbn } = target.dataset
   const isDeleted = text === '삭제하기'
-  let isConfirm = false
+  // 삭제하기 로직
   if (isDeleted) {
-    const confirmMessage = confirm('도서를 삭제하시겠습니까?')
-    isConfirm = confirmMessage
-  } else {
-    isConfirm = true
-  }
-
-  if (isConfirm) {
-    const notyf = new Notyf({
-      types: [
-        {
-          type: 'success',
-          background: 'blue',
-        },
-      ],
-      dismissible: true,
-    })
-    const { isbn } = target.dataset
-    const savedBooks = store.getLocalStorage()
-    const updatedBooks = savedBooks.map((book) => {
-      return book.isbn === isbn ? { ...book, is_listed: !isDeleted } : book
-    })
-
-    store.setLocalStorage(updatedBooks)
-
-    if (window.location.pathname === '/readinglist' && isDeleted) {
-      target.closest('.card').remove()
-    }
-    if (isDeleted) {
+    removeReadingList(isbn, () => {
+      if (window.location.pathname === '/readinglist') {
+        target.closest('.card').remove()
+      }
       target.innerText = `읽기 목록에 담기`
       notyf.success('읽기 목록에서 삭제되었습니다.')
-    } else {
-      target.innerText = `삭제하기`
-      notyf.success('읽기 목록에 담았습니다.')
-    }
+    })
+    return
   }
+
+  addReadingList(isbn, () => {
+    target.innerText = `삭제하기`
+    notyf.success('읽기 목록에 담았습니다.')
+  })
 }
 
 const setEvent = () => {
@@ -99,9 +117,7 @@ const setEvent = () => {
     return
   })
 
-  document.body.addEventListener('click', (e) => {
-    const { target } = e
-
+  document.body.addEventListener('click', ({ target }) => {
     if (target.classList.contains('search_btn')) {
       if ($query.value.trim() !== '') {
         search()
@@ -115,10 +131,44 @@ const setEvent = () => {
   })
 }
 
-const checkBookStatus = (props) => {
-  const { updatedSearchedList } = props
+const renderBookStatus = (books) => {
+  // update ui
+  books.forEach((v, i) => {
+    const statusBox = $(`div[data-isbn='${v.isbn}']`)
+    if (statusBox !== undefined) {
+      while (statusBox.hasChildNodes()) {
+        statusBox.removeChild(statusBox.lastChild)
+      }
+      statusBox.appendChild(parseHTML(StatusBox(books[i])))
+    }
+
+    const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest('div')
+    if (infoButtonWrap !== undefined) {
+      while (infoButtonWrap.hasChildNodes()) {
+        infoButtonWrap.removeChild(infoButtonWrap.lastChild)
+      }
+      infoButtonWrap.appendChild(parseHTML(ButtonBox(books[i])))
+    }
+  })
+}
+
+const updateBookStatus = (updatedBooks) => {
+  let savedBooks = store.getLocalStorage()
+
+  return savedBooks.map((book) => {
+    const idx = updatedBooks.findIndex((b) => b.isbn === book.isbn)
+
+    if (idx !== -1) {
+      return { ...updatedBooks[idx], updated: getToday() }
+    } else {
+      return book
+    }
+  })
+}
+
+const checkBookStatus = ({ bookList }) => {
   // update 날짜가 오늘이 아닌 경우 조회
-  const shouldUpdateList = updatedSearchedList.filter((book) => {
+  const shouldUpdateList = bookList.filter((book) => {
     return book.updated !== getToday()
   })
 
@@ -126,41 +176,11 @@ const checkBookStatus = (props) => {
   if (shouldUpdateList.length > 0) {
     getLibraryInfo(shouldUpdateList)
       .then((response) => {
-        let savedBooks = store.getLocalStorage()
-
         // 저장된 값을 현재 날짜로 업데이트 하기
-        const updatedBooks = savedBooks.map((book) => {
-          const idx = response.findIndex((b) => b.isbn === book.isbn)
-
-          if (idx !== -1) {
-            return { ...response[idx], updated: getToday() }
-          } else {
-            return book
-          }
-        })
-
+        const updatedBooks = updateBookStatus(response)
         store.setLocalStorage(updatedBooks)
 
-        // update ui
-        response.forEach((v, i) => {
-          const statusBox = $(`div[data-isbn='${v.isbn}']`)
-          if (statusBox !== undefined) {
-            while (statusBox.hasChildNodes()) {
-              statusBox.removeChild(statusBox.lastChild)
-            }
-            statusBox.appendChild(parseHTML(StatusBox(response[i])))
-          }
-
-          const infoButtonWrap = $(`button[data-isbn='${v.isbn}']`).closest(
-            'div'
-          )
-          if (infoButtonWrap !== undefined) {
-            while (infoButtonWrap.hasChildNodes()) {
-              infoButtonWrap.removeChild(infoButtonWrap.lastChild)
-            }
-            infoButtonWrap.appendChild(parseHTML(ButtonBox(response[i])))
-          }
-        })
+        renderBookStatus(response)
       })
       .catch((err) => {
         console.error(err)
@@ -177,6 +197,7 @@ export default function App(props) {
       }
       $app.appendChild(parseHTML(Header()))
       $app.appendChild(component)
+
       setEvent()
 
       // 대출 상태 조회하기
