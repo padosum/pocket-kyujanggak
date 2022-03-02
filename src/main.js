@@ -18,6 +18,45 @@ function handlePageChange(page) {
   reRender = false
 }
 
+const updateBookList = (searchedList) => {
+  const savedBooks = store.getLocalStorage()
+
+  // 저장된 데이터가 없는 경우
+  if (savedBooks === null) {
+    return searchedList
+  }
+
+  return searchedList.map((book) => {
+    // 도서가 기존에 저장이 되었다면 저장된 데이터 가져오기
+    // NOTE 오늘 이미 조회한 도서라면 상태 조회 API를 요청하지 않기 위해서
+    const idx = savedBooks.findIndex((b) => b.isbn === book.isbn)
+    if (idx !== -1) {
+      return savedBooks[idx]
+    } else {
+      return book
+    }
+  })
+}
+
+const saveSearchedList = (searchedList) => {
+  const savedBooks = store.getLocalStorage()
+
+  // 저장된 데이터가 없으면 새로 저장
+  if (savedBooks === null) {
+    store.setLocalStorage(searchedList)
+    return
+  }
+
+  // 검색한 도서 중 저장이 되지 않은 도서 추가 저장
+  const newBooks = searchedList.filter((book) => {
+    const idx = savedBooks.findIndex((b) => b.isbn === book.isbn)
+    return idx === -1
+  })
+
+  const newSaveList = [...savedBooks, ...newBooks]
+  store.setLocalStorage(newSaveList)
+}
+
 const searchPage = () => {
   const urlSearchParams = new URLSearchParams(window.location.search)
   const params = Object.fromEntries(urlSearchParams.entries())
@@ -29,45 +68,6 @@ const searchPage = () => {
     } catch (err) {
       console.error(err)
     }
-  }
-
-  const updateBookList = (searchedList) => {
-    const savedBooks = store.getLocalStorage()
-
-    // 저장된 데이터가 없는 경우
-    if (savedBooks === null) {
-      return searchedList
-    }
-
-    return searchedList.map((book) => {
-      // 도서가 기존에 저장이 되었다면 저장된 데이터 가져오기
-      // NOTE 오늘 이미 조회한 도서라면 상태 조회 API를 요청하지 않기 위해서
-      const idx = savedBooks.findIndex((b) => b.isbn === book.isbn)
-      if (idx !== -1) {
-        return savedBooks[idx]
-      } else {
-        return book
-      }
-    })
-  }
-
-  const saveSearchedList = (searchedList) => {
-    const savedBooks = store.getLocalStorage()
-
-    // 저장된 데이터가 없으면 새로 저장
-    if (savedBooks === null) {
-      store.setLocalStorage(searchedList)
-      return
-    }
-
-    // 검색한 도서 중 저장이 되지 않은 도서 추가 저장
-    const newBooks = searchedList.filter((book) => {
-      const idx = savedBooks.findIndex((b) => b.isbn === book.isbn)
-      return idx === -1
-    })
-
-    const newSaveList = [...savedBooks, ...newBooks]
-    store.setLocalStorage(newSaveList)
   }
   // 책 검색
   search(query, currentPage)
