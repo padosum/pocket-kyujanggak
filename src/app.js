@@ -101,14 +101,15 @@ const setEvent = () => {
 const renderBookStatus = (book) => {
   // update ui
   const statusBox = $(`div[data-isbn='${book.isbn}']`)
-  if (statusBox !== undefined) {
+  if (statusBox) {
     while (statusBox.hasChildNodes()) {
       statusBox.removeChild(statusBox.lastChild)
     }
     statusBox.appendChild(parseHTML(StatusBox(book)))
   }
-  const infoButtonWrap = $(`button[data-isbn='${book.isbn}']`).closest('div')
-  if (infoButtonWrap !== undefined) {
+  const infoButton = $(`button[data-isbn='${book.isbn}']`)
+  if (infoButton) {
+    const infoButtonWrap = infoButton.closest('div')
     while (infoButtonWrap.hasChildNodes()) {
       infoButtonWrap.removeChild(infoButtonWrap.lastChild)
     }
