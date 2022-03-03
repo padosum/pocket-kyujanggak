@@ -122,7 +122,7 @@ const renderBookStatus = (book) => {
   }
 }
 
-const updateBookStatus = (updatedBooks) => {
+const updateDate = (updatedBooks) => {
   let savedBooks = store.getLocalStorage()
 
   return savedBooks.map((book) => {
@@ -162,7 +162,7 @@ const checkBookStatus = ({ bookList }) => {
 
       // 도서 상태 정보 저장
       store.setLocalStorage(
-        updateBookStatus({
+        updateDate({
           ...bookMap.get(book.isbn),
           hasBook,
           loanAvailable,
