@@ -141,10 +141,10 @@ const checkBookStatus = ({ bookList }) => {
   if (shouldUpdateList.length > 0) {
     const bookMap = new Map()
     shouldUpdateList.map(async (book) => {
-      const [, isbn13] = book.isbn.split(' ')
-      bookMap.set(isbn13, book)
+      bookMap.set(book.isbn, book)
 
       // 대출 상태 가져오기
+      const [, isbn13] = book.isbn.split(' ')
       const { response } = await BookApi.getBookStatus(isbn13)
       if (response.error) {
         console.error(response)
@@ -155,7 +155,7 @@ const checkBookStatus = ({ bookList }) => {
 
       // 도서 상태 ui 업데이트
       renderBookStatus({
-        ...bookMap.get(isbn13),
+        ...bookMap.get(book.isbn),
         hasBook,
         loanAvailable,
       })
@@ -163,7 +163,7 @@ const checkBookStatus = ({ bookList }) => {
       // 도서 상태 정보 저장
       store.setLocalStorage(
         updateBookStatus({
-          ...bookMap.get(isbn13),
+          ...bookMap.get(book.isbn),
           hasBook,
           loanAvailable,
         })
