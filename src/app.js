@@ -2,7 +2,6 @@ import Header from './components/Header'
 import Foooter from './components/Footer'
 import StatusBox from './components/StatusBox'
 import parseHTML from './helpers/parse-html'
-import Paginator from './components/Paginator'
 import store from './store/index'
 import { getToday, $ } from './helpers/utils'
 import { Notyf } from 'notyf'
@@ -42,20 +41,20 @@ const addReadingList = (isbn, cbFunc) => {
   }
 }
 
-const notyf = new Notyf({
-  types: [
-    {
-      type: 'success',
-      background: 'blue',
-    },
-  ],
-  dismissible: true,
-})
-
 const toggleReadingList = (target) => {
-  const text = target.innerText
   const { isbn } = target.dataset
-  const isDeleted = text === '삭제하기'
+  const isDeleted = target.innerText === '삭제하기'
+
+  const notyf = new Notyf({
+    types: [
+      {
+        type: 'success',
+        background: 'blue',
+      },
+    ],
+    dismissible: true,
+  })
+
   // 삭제하기 로직
   if (isDeleted) {
     removeReadingList(isbn, () => {
@@ -74,7 +73,7 @@ const toggleReadingList = (target) => {
   })
 }
 
-const setEvent = () => {
+const setEvent = (props) => {
   const $query = $('#query')
 
   $query.addEventListener('keypress', (e) => {
@@ -84,15 +83,21 @@ const setEvent = () => {
     return
   })
 
-  document.body.addEventListener('click', ({ target }) => {
-    if (target.classList.contains('search_btn')) {
+  document.body.addEventListener('click', (e) => {
+    if (e.target.classList.contains('search_btn')) {
       if ($query.value.trim() !== '') {
         search()
       }
       return
     }
-    if (target.classList.contains('reading_btn')) {
-      toggleReadingList(target)
+
+    if (e.target.classList.contains('reading_btn')) {
+      toggleReadingList(e.target)
+      return
+    }
+
+    if (e.target.classList.contains('page_number')) {
+      props.handlePageChange(Number(e.target.dataset.page))
       return
     }
   })
@@ -177,14 +182,13 @@ export default function App(props) {
       $app.appendChild(parseHTML(Header()))
       $app.appendChild(component)
 
-      setEvent()
+      const { pathname } = window.location
 
-      // 대출 상태 조회하기
-      if ((window.location.pathname !== '/') & (props !== undefined)) {
-        console.time('checkBookStatus')
+      setEvent(props)
+
+      if ((pathname !== '/') & (props !== undefined)) {
+        // 도서 대출 상태 조회하기
         checkBookStatus(props)
-        console.timeEnd('checkBookStatus')
-        $('main').appendChild(Paginator(props))
       }
       $app.appendChild(parseHTML(Foooter()))
     },
