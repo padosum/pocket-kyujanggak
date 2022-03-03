@@ -1,12 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/"
+      "source": "/api/bookExist",
+      "destination": "http://data4library.kr/api/bookExist"
     },
     {
-      "source": "/api/:path*",
-      "destination": "http://data4library.kr/api/:path*"
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
