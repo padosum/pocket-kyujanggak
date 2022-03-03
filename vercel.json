@@ -6,7 +6,7 @@
     },
     {
       "source": "/api/bookExist",
-      "destination": "http://data4library.kr"
+      "destination": "http://data4library.kr/api/bookExist"
     }
   ]
 }
