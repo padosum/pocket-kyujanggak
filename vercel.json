@@ -5,8 +5,8 @@
       "destination": "/"
     },
     {
-      "source": "/api/bookExist",
-      "destination": "http://data4library.kr/api/bookExist"
+      "source": "/api/bookExist*",
+      "destination": "http://data4library.kr/api/bookExist*"
     }
   ]
 }
