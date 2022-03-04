@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Noto Sans KR', sans-serif;
   color: #333;
@@ -29,7 +33,6 @@ a:visited {
 .color-unavailable {
   color: #666;
 }
-
 
 
 
@@ -361,9 +364,25 @@ footer {
   align-items: center;
   padding: 75px 0px 15px;
   color: rgb(153,153,153);
+  flex-direction: column;
 }
 
 
+footer .top {
+    display: none;
+    position: fixed;
+    right: 0;
+    bottom: 20px;
+
+    text-decoration: none;
+    padding: 10px;
+    margin-right: 30px;
+    background: #fafafa;
+    color: rgb(0,62,230);
+    border: 1px solid rgb(0,62,230);
+    box-shadow: rgb(0,48,179) 5px 6px 0px;
+    white-space: nowrap;
+}
 
 
 /*------------------------------------*\

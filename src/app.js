@@ -101,6 +101,16 @@ const setEvent = (props) => {
       return
     }
   })
+
+  window.addEventListener('scroll', () => {
+    const $top = $('.top')
+    if(document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+      $top.style.display = 'block'
+    } else {
+      $top.style.display = 'none'
+    }
+    return 
+  })
 }
 
 const renderBookStatus = (book) => {
