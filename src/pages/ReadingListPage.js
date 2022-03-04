@@ -1,7 +1,7 @@
 import App from '../app'
+import store from '../store'
 import parseHTML from '../helpers/parse-html'
 import ReadingList from '../components/ReadingList'
-import store from '../store'
 
 const ReadingListPage = () => {
   const readingList = (store.getLocalStorage() ?? []).filter(

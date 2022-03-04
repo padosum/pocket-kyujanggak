@@ -4,9 +4,8 @@ const Header = () => {
   <div class="header_img_wrap">
       <div class="header_img">
       </div>
-    </div>
+  </div>
   <header>
-    
     <h1 class="title"><a href="/">포켓 규장각</a></h1>
     <div class="header-contents">
       <div class="search_form">
