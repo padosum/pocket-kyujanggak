@@ -84,13 +84,6 @@ const setEvent = (props) => {
   })
 
   document.body.addEventListener('click', (e) => {
-    if (e.target.classList.contains('search_btn')) {
-      if ($query.value.trim() !== '') {
-        search()
-      }
-      return
-    }
-
     if (e.target.classList.contains('reading_btn')) {
       toggleReadingList(e.target)
       return
@@ -104,12 +97,15 @@ const setEvent = (props) => {
 
   window.addEventListener('scroll', () => {
     const $top = $('.top')
-    if(document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+    if (
+      document.body.scrollTop > 30 ||
+      document.documentElement.scrollTop > 30
+    ) {
       $top.style.display = 'block'
     } else {
       $top.style.display = 'none'
     }
-    return 
+    return
   })
 }
 

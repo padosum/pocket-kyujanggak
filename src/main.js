@@ -3,7 +3,13 @@ import SearchPage from './pages/SearchPage'
 import PageNotFound from './pages/PageNotFound'
 import store from './store/index'
 
+import './style/normalize.css'
+import './style/shared/modules/layout.css'
+import './style/shared/modules/flex.css'
+import './style/shared/modules/spacing.css'
+import './style/shared/modules/sizing.css'
 import './style/style.css'
+
 import { getToday } from './helpers/utils'
 import ReadingListPage from './pages/ReadingListPage'
 

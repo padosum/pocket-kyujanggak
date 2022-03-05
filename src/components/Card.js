@@ -9,17 +9,17 @@ export default function Card(props) {
   const cutDescription = contents.length > 100
   const description = cutDescription ? cutString(contents, 100) : contents
 
-  return `<div class="card">
-      <div class="thumbnail_wrap">
+  return `<div class="card d-flex mb-10">
+      <div class="thumbnail_wrap d-flex justify-center p-8">
         <img src="${thumbnail}"/>
       </div>
-      <div class="info_wrap">
-        <div class="title_wrap">
+      <div class="info_wrap d-flex flex-col flex-grow py-0 px-3">
+        <div class="title_wrap d-flex justify-between mt-4">
           <span class="title">
             ${title}
           </span>
           <a href="${url}" rel="noopener" target="_blank">
-              <i class="fa fa-solid fa-link" style="margin-left: -10px"></i>
+              <i class="fa fa-solid fa-link ml-1"></i>
           </a>
         </div>
         
@@ -32,10 +32,10 @@ export default function Card(props) {
         ${
           updated === getToday()
             ? StatusBox(props)
-            : `<div class="message" data-isbn="${isbn}"><span><i class="fa-solid fa-magnifying-glass"></i> 확인중입니다...</span> <span class="lds-dual-ring"></span>
+            : `<div class="message d-flex" data-isbn="${isbn}"><span class="mt-1"><i class="fa-solid fa-magnifying-glass"></i> 확인중입니다...</span> <span class="lds-dual-ring"></span>
         </div>`
         }
-        <div class="info_button_wrap">
+        <div class="info_button_wrap d-flex justify-end py-3">
           ${ButtonBox(props)}
         </div>
       </div>

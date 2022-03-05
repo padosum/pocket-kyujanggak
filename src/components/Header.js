@@ -1,19 +1,17 @@
-
 const Header = () => {
-	return `
-  <div class="header_img_wrap">
-      <div class="header_img">
+  return `
+  <div class="header_img_wrap pt-2">
+      <div class="header_img h-100">
       </div>
   </div>
-  <header>
-    <h1 class="title"><a href="/">포켓 규장각</a></h1>
-    <div class="header-contents">
-      <div class="search_form">
-        <input id="query" placeholder="도서명" aria-label="도서명 검색"/>
-        <button class="btn search_btn">검색</button>
+  <header class="sticky d-flex flex-col items-center py-2">
+    <a href="/"><h1 class="title mt-1 p-2">포켓 규장각</h1></a>
+    <div class="header-contents d-flex justify-center">
+      <div class="search_form d-flex items-center mr-2">
+        <input class="mr-2 p-1" id="query" type="text" placeholder="도서명" aria-label="도서명 검색"/>
       </div>
-      <nav>
-        <a class="reading_list" href="/readinglist">읽기 목록</a>
+      <nav class="d-flex items-center">
+        <a class="reading_list p-1" href="/readinglist" title="읽기 목록"><i class="fa-solid fa-bookmark"></i></a>
       </nav>
     </div>
   </header>
