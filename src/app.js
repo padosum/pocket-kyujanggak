@@ -197,6 +197,8 @@ export default function App(props) {
         checkBookStatus(props)
       }
       $app.appendChild(parseHTML(Foooter()))
+
+      document.scrollingElement.scrollTop = 0
     },
   }
 }
