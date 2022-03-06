@@ -93,6 +93,21 @@ const setEvent = (props) => {
       props.handlePageChange(Number(e.target.dataset.page))
       return
     }
+
+    if (e.target.classList.contains('dd-button')) {
+      e.target.classList.toggle('show')
+      return
+    }
+
+    if (!e.target.classList.contains('dd-button')) {
+      const dropdowns = [...document.getElementsByClassName('dd-button')]
+      dropdowns.forEach((dropdown) => {
+        if (dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show')
+        }
+      })
+      return
+    }
   })
 
   window.addEventListener('scroll', () => {
@@ -198,6 +213,7 @@ export default function App(props) {
       }
       $app.appendChild(parseHTML(Foooter()))
 
+      // 페이지 이동시 스크롤 최상단으로 가기 위함
       document.scrollingElement.scrollTop = 0
     },
   }
