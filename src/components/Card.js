@@ -8,10 +8,11 @@ export default function Card(props) {
     : authors
   const cutDescription = contents.length > 100
   const description = cutDescription ? cutString(contents, 100) : contents
-
+  const imageUrl = thumbnail === '' ? '../assets/no-image.png' : thumbnail
+  
   return `<div class="card d-flex mb-10">
       <div class="thumbnail_wrap d-flex justify-center p-8">
-        <img src="${thumbnail}"/>
+        <img src="${imageUrl}"/>
       </div>
       <div class="info_wrap d-flex flex-col flex-grow py-0 px-3">
         <div class="title_wrap d-flex justify-between mt-4">
