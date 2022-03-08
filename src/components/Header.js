@@ -27,7 +27,8 @@ const Header = {
       if (e.target.classList.contains('js-nav')) {
         e.preventDefault()
         const path = e.target.getAttribute('href')
-        historyRouterPush(path)
+        const url = new URL(window.location.origin + path)
+        historyRouterPush(url)
       }
     })
 
@@ -38,11 +39,10 @@ const Header = {
       } = e
 
       if (key === 'Enter' && value.trim() !== '') {
-        // ! refactoring
+        e.target.value = ''
         const url = new URL(window.location.origin + '/search')
         url.searchParams.set('q', value)
-        window.history.pushState({}, '', url)
-        contentRender(SearchList)
+        historyRouterPush(url, true)
       }
       return
     })

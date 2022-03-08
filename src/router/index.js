@@ -22,13 +22,17 @@ const initRoutes = () => {
 }
 
 // set browser history
-const historyRouterPush = (pathName) => {
-  window.history.pushState({}, pathName, window.location.origin + pathName)
-  contentRender(routes[pathName])
+const historyRouterPush = ({ pathname, search }, beforeRender) => {
+  window.history.pushState({}, '', window.location.origin + pathname + search)
+  contentRender(routes[pathname], beforeRender)
 }
 
-const contentRender = async (router = PageNotFound) => {
+const contentRender = async (router = PageNotFound, beforeRender = false) => {
   const content = null || $('#content_container')
+
+  if (beforeRender) {
+    await router.before_render()
+  }
 
   content.innerHTML = await router.render()
   await router.after_render()
@@ -46,7 +50,6 @@ const initRender = async (router = PageNotFound) => {
   await Header.after_render()
   footer.outerHTML = Footer()
 
-  await router.before_render()
   contentRender(router)
 }
 
