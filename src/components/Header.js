@@ -1,9 +1,10 @@
 import { $ } from '../helpers/utils'
 import { historyRouterPush } from '../router'
+
 const Header = {
   render: async () => {
     const view = `
-      <div class="header_img_wrap pt-2">
+      <div class="header_img_wrap pt-2"> 
           <div class="header_img h-100">
           </div>
       </div>
@@ -16,7 +17,7 @@ const Header = {
           <nav class="d-flex items-center">
             <a class="js-nav reading_list primary-shadow p-1" href="/readinglist" title="읽기 목록"><i class="fa-solid fa-bookmark pointer-none"></i></a>
           </nav>
-        </div>
+        </div> 
       </header>
       `
     return view
@@ -41,13 +42,12 @@ const Header = {
 
       if (key === 'Enter' && value.trim() !== '') {
         e.target.value = ''
-        const url = new URL(window.location.origin + '/search')
+        const url = new URL(`${window.location.origin}/search`)
         url.searchParams.set('q', value)
         historyRouterPush(url, {
           resetPage: true,
         })
       }
-      return
     })
   },
 }

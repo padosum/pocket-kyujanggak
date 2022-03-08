@@ -1,6 +1,10 @@
 import store from './store/index'
-import { initRoutes } from './router'
-import { $ } from './helpers/utils'
+import { routes } from './router'
+import { $, contentRender } from './helpers/utils'
+import Header from './components/Header'
+import Footer from './components/Footer'
+import PageNotFound from './pages/PageNotFound'
+
 import './style/normalize.css'
 import './style/shared/modules/layout.css'
 import './style/shared/modules/flex.css'
@@ -30,8 +34,27 @@ const setEvent = () => {
     } else {
       $top.style.display = 'none'
     }
-    return
   })
+}
+
+const initRender = async (router = PageNotFound) => {
+  const header = null || $('#header_container')
+  const footer = null || $('#footer_container')
+
+  // Render Header, Footer
+  header.outerHTML = await Header.render()
+  await Header.after_render()
+  footer.outerHTML = Footer()
+
+  // Render Content
+  contentRender(router)
+}
+
+const initRoutes = () => {
+  initRender(routes[window.location.pathname])
+  window.onpopstate = () => {
+    contentRender(routes[window.location.pathname])
+  }
 }
 
 const init = () => {

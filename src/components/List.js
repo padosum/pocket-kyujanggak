@@ -1,7 +1,7 @@
 import Card from './Card'
 
-export default function List(books, title) {
-  let list = `<h2 class="title mb-5">${title}</h2>
+export default function List(books, listTitle) {
+  let list = `<h2 class="title mb-5">${listTitle}</h2>
       <div class="list">`
 
   books.forEach((el) => {
@@ -15,7 +15,7 @@ export default function List(books, title) {
       hasBook,
       loanAvailable,
       updated,
-      is_listed,
+      isListed,
     } = el
     list += Card({
       title,
@@ -27,7 +27,7 @@ export default function List(books, title) {
       hasBook,
       loanAvailable,
       updated,
-      is_listed,
+      isListed,
     })
   })
 

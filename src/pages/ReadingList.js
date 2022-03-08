@@ -8,7 +8,7 @@ const ReadingList = {
   bookList: [],
   async render() {
     const readingList = (store.getLocalStorage() ?? []).filter(
-      (book) => book.is_listed
+      (book) => book.isListed
     )
     this.bookList = readingList
 
@@ -26,14 +26,13 @@ const ReadingList = {
       $('.list').addEventListener('click', (e) => {
         // 읽기 목록 추가
         if (e.target.classList.contains('reading_btn')) {
-          toggleReadingList(e.target)
+          e.target.innerText = toggleReadingList(e.target)
           return
         }
 
         // 희망도서 신청
         if (e.target.classList.contains('dd-btn')) {
           e.target.classList.toggle('show')
-          return
         }
       })
     }

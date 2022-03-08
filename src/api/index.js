@@ -14,7 +14,6 @@ const request = async (url, params, option) => {
         dismissible: true,
       })
       notyf.error('에러가 발생했습니다.')
-      console.error(response)
     }
     return response.json()
   } catch (err) {

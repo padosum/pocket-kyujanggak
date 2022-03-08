@@ -4,10 +4,10 @@ import List from '../components/List'
 import Paginator from '../components/Paginator'
 import StatusBox from '../components/StatusBox'
 import ButtonBox from '../components/ButtonBox'
-import { $, getToday } from '../helpers/utils'
-import { contentRender } from '../router'
+import { $, getToday, contentRender } from '../helpers/utils'
 import toggleReadingList from '../toggleReadingList'
 import Skeleton from '../components/Skeleton'
+
 const updateBookList = (searchedList) => {
   const savedBooks = store.getLocalStorage()
 
@@ -22,9 +22,8 @@ const updateBookList = (searchedList) => {
     const idx = savedBooks.findIndex((b) => b.isbn === book.isbn)
     if (idx !== -1) {
       return savedBooks[idx]
-    } else {
-      return book
     }
+    return book
   })
 }
 
@@ -44,7 +43,7 @@ const renderBookStatus = (book) => {
 }
 
 const updateDate = (updatedBooks) => {
-  let savedBooks = store.getLocalStorage()
+  const savedBooks = store.getLocalStorage()
 
   return savedBooks.map((book) => {
     return book.isbn === updatedBooks.isbn
@@ -55,7 +54,7 @@ const updateDate = (updatedBooks) => {
 
 const checkBookStatus = ({ bookList }) => {
   // update 날짜가 오늘이 아닌 경우 조회
-  let shouldUpdateList = bookList.filter((book) => {
+  const shouldUpdateList = bookList.filter((book) => {
     return book.updated !== getToday()
   })
   // 대출 상태를 조회할 책 목록이 있다면
@@ -66,12 +65,13 @@ const checkBookStatus = ({ bookList }) => {
 
       // 대출 상태 가져오기
       const [, isbn13] = book.isbn.split(' ')
-      let { response } = await BookApi.getBookStatus(isbn13)
-      if (response.error) {
-        console.error(response)
+      const { response } = await BookApi.getBookStatus(isbn13)
+      let hasBook = 'N'
+      let loanAvailable = 'N'
+      if (!response.error) {
+        hasBook = response.result.hasBook
+        loanAvailable = response.result.loanAvailable
       }
-
-      const { hasBook, loanAvailable } = response.result
 
       // 도서 상태 ui 업데이트
       renderBookStatus({
@@ -127,11 +127,9 @@ const SearchList = {
         return `
             ${List(this.bookList, `'${query}' 검색 결과`)}
             ${Paginator(pages, this.currentPage).outerHTML}`
-      } else {
-        return `${query}에 대한 도서 검색 결과가 없습니다.`
       }
+      return `${query}에 대한 도서 검색 결과가 없습니다.`
     } catch (err) {
-      console.error(`Errrrr`, err)
       return `도서 검색 중 오류가 발생했습니다.`
     }
   },
@@ -162,14 +160,13 @@ const SearchList = {
 
     $('.list').addEventListener('click', (e) => {
       if (e.target.classList.contains('reading_btn')) {
-        toggleReadingList(e.target)
+        e.target.innerText = toggleReadingList(e.target)
         return
       }
 
       // 희망도서 신청
       if (e.target.classList.contains('dd-btn')) {
         e.target.classList.toggle('show')
-        return
       }
     })
 

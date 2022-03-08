@@ -46,7 +46,7 @@ export default function Paginator(...props) {
     pagination.appendChild(first)
   }
 
-  for (let i = maxLeft; i <= maxRight; i++) {
+  for (let i = maxLeft; i <= maxRight; i += 1) {
     const pageNumber = document.createElement('a')
     pageNumber.className = 'page_number'
     if (currentPage === i) {
