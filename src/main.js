@@ -1,8 +1,6 @@
-import Home from './pages/Home'
-import SearchPage from './pages/SearchPage'
-import PageNotFound from './pages/PageNotFound'
 import store from './store/index'
-
+import { initRoutes } from './router'
+import { $ } from './helpers/utils'
 import './style/normalize.css'
 import './style/shared/modules/layout.css'
 import './style/shared/modules/flex.css'
@@ -10,31 +8,37 @@ import './style/shared/modules/spacing.css'
 import './style/shared/modules/sizing.css'
 import './style/style.css'
 
-import { getToday } from './helpers/utils'
-import ReadingListPage from './pages/ReadingListPage'
+const setEvent = () => {
+  document.body.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('dd-button')) {
+      const dropdowns = [...document.getElementsByClassName('dd-button')]
+      dropdowns.forEach((dropdown) => {
+        if (dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show')
+        }
+      })
+    }
+  })
 
-const cleanSavedBooks = () => {
-  if (store.getUpdatedDate() !== getToday()) {
-    store.clearLocalStorage()
-    store.setUpdateDate()
-  }
-}
-
-const routes = {
-  '/': Home,
-  '/search': SearchPage,
-  '/readinglist': ReadingListPage,
-}
-
-const renderPage = (viewPage = PageNotFound) => {
-  viewPage()
+  window.addEventListener('scroll', () => {
+    const $top = $('.top')
+    if (
+      document.body.scrollTop > 30 ||
+      document.documentElement.scrollTop > 30
+    ) {
+      $top.style.display = 'block'
+    } else {
+      $top.style.display = 'none'
+    }
+    return
+  })
 }
 
 const init = () => {
-  cleanSavedBooks()
+  store.cleanSavedBooks()
 
-  const { pathname } = window.location
-  renderPage(routes[pathname])
+  initRoutes()
+  setEvent()
 }
 
 init()

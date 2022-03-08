@@ -1,5 +1,5 @@
-export default function Paginator(props) {
-  const { pages, currentPage } = props
+export default function Paginator(...props) {
+  const [pages, currentPage] = props
   const maxPage = 5
   const booksPerPage = 10
   //* api 호출 최댓값 100페이지

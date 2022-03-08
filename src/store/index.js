@@ -13,8 +13,15 @@ const store = {
   setUpdateDate() {
     localStorage.setItem('updated', getToday())
   },
-  clearLocalStorage() {
-    localStorage.removeItem('books')
+  clearUnlistedBooks() {
+    const savedBooks = this.getLocalStorage() ?? []
+    this.setLocalStorage(savedBooks.filter((item) => item.is_listed))
+  },
+  cleanSavedBooks() {
+    if (this.getUpdatedDate() !== getToday()) {
+      this.clearUnlistedBooks()
+      this.setUpdateDate()
+    }
   },
 }
 
