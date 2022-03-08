@@ -28,6 +28,12 @@ a:visited {
   text-decoration: none;
 }
 
+textarea,
+input[type] {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
 .pointer-none {
   pointer-events: none;
 }
@@ -40,10 +46,13 @@ a:visited {
   color: #666;
 }
 
-textarea,
-input[type] {
-  -webkit-appearance: none;
-  border-radius: 0;
+.primary-shadow {
+  border: 1px solid rgb(0, 62, 230);
+  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
+}
+
+.second-shadow {
+  box-shadow: 0 2px 4px 1px rgb(0 0 0 / 17%);
 }
 
 /*------------------------------------*\
@@ -71,8 +80,6 @@ header .title {
   font-family: 'ChosunGs';
   font-size: 1.4rem;
   color: rgb(0, 62, 230);
-  border: 1px solid rgb(0, 62, 230);
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
 }
 
 header .header-contents {
@@ -87,8 +94,6 @@ header .reading_list {
   font-weight: 300;
   font-size: 16px;
   color: rgb(0, 62, 230);
-  border: 1px solid rgb(0, 62, 230);
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
 }
 
 @media screen and (max-width: 320px) {
@@ -120,8 +125,6 @@ header input {
   font-size: 12px;
   min-width: 200px;
   background: #fafafa;
-  border: solid 1px #003ee6;
-  box-shadow: 5px 6px 0px #0030b3;
 }
 
 header input::placeholder {
@@ -209,13 +212,13 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem 20vw;
+  padding: 1rem 20vw;
   background-color: #fafafa;
 }
 
 @media screen and (max-width: 1024px) {
   main {
-    padding: 3rem 10vw;
+    padding: 1rem 10vw;
   }
 }
 
@@ -229,9 +232,7 @@ main .information {
   line-height: 1.5;
   word-break: keep-all;
   background-color: #fff;
-  border: solid 1px rgb(0, 62, 230);
   border-radius: 3px;
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
 }
 
 /*------------------------------------*\
@@ -241,19 +242,17 @@ main .information {
 .card {
   background-color: #fff;
   border-radius: 3px;
-  border: 1px solid rgb(0, 62, 230);
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
+}
+
+.book-img {
+  width: 120px;
+  height: 160px;
 }
 
 @media screen and (max-width: 768px) {
   .card {
     flex-direction: column;
   }
-}
-
-.card .thumbnail_wrap img {
-  border: 1px solid rgb(0, 62, 230);
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
 }
 
 .card .info_wrap {
@@ -294,7 +293,7 @@ main .information {
 
 .card .info_wrap .description {
   line-height: 1.5;
-  word-break: keep-all;
+  /* word-break: keep-all; */
 }
 
 .card .info_wrap .message {
@@ -372,8 +371,6 @@ footer .top {
   right: 0;
   bottom: 20px;
   color: rgb(0, 62, 230);
-  border: 1px solid rgb(0, 62, 230);
   background: #fafafa;
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
   white-space: nowrap;
 }

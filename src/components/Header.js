@@ -1,6 +1,5 @@
 import { $ } from '../helpers/utils'
-import { contentRender, historyRouterPush } from '../router'
-import SearchList from '../pages/SearchList'
+import { historyRouterPush } from '../router'
 const Header = {
   render: async () => {
     const view = `
@@ -9,13 +8,13 @@ const Header = {
           </div>
       </div>
       <header class="sticky d-flex flex-col items-center pt-1">
-        <a class="js-nav" href="/"><h1 class="title mt-1 p-2 pointer-none">포켓 규장각</h1></a>
+        <a class="js-nav" href="/"><h1 class="title mt-1 p-2 primary-shadow pointer-none">포켓 규장각</h1></a>
         <div class="header-contents d-flex justify-center">
           <div class="search_form d-flex items-center mr-2">
-            <input class="mr-2 p-1" id="query" type="text" placeholder="도서명" aria-label="도서명 검색"/>
+            <input class="primary-shadow mr-2 p-1" id="query" type="text" placeholder="도서명" aria-label="도서명 검색"/>
           </div>
           <nav class="d-flex items-center">
-            <a class="js-nav reading_list p-1" href="/readinglist" title="읽기 목록"><i class="fa-solid fa-bookmark pointer-none"></i></a>
+            <a class="js-nav reading_list primary-shadow p-1" href="/readinglist" title="읽기 목록"><i class="fa-solid fa-bookmark pointer-none"></i></a>
           </nav>
         </div>
       </header>
@@ -28,7 +27,9 @@ const Header = {
         e.preventDefault()
         const path = e.target.getAttribute('href')
         const url = new URL(window.location.origin + path)
-        historyRouterPush(url)
+        historyRouterPush(url, {
+          resetPage: true,
+        })
       }
     })
 
@@ -42,7 +43,9 @@ const Header = {
         e.target.value = ''
         const url = new URL(window.location.origin + '/search')
         url.searchParams.set('q', value)
-        historyRouterPush(url, true)
+        historyRouterPush(url, {
+          resetPage: true,
+        })
       }
       return
     })

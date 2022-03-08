@@ -2,6 +2,7 @@ import store from '../store'
 import List from '../components/List'
 import { $ } from '../helpers/utils'
 import toggleReadingList from '../toggleReadingList'
+import Skeleton from '../components/Skeleton'
 
 const ReadingList = {
   bookList: [],
@@ -17,7 +18,9 @@ const ReadingList = {
 
     return `${List(readingList, '읽기 목록')}`
   },
-  before_render: async () => {},
+  before_render: async () => {
+    return Skeleton(10)
+  },
   async after_render() {
     if (this.bookList.length > 0) {
       $('.list').addEventListener('click', (e) => {

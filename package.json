@@ -16,6 +16,7 @@
     "vite-plugin-webfont-dl": "^1.0.9"
   },
   "dependencies": {
-    "notyf": "^3.10.0"
+    "notyf": "^3.10.0",
+    "skeleton-screen-css": "^1.0.1"
   }
 }

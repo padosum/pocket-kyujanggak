@@ -7,6 +7,7 @@ import ButtonBox from '../components/ButtonBox'
 import { $, getToday } from '../helpers/utils'
 import { contentRender } from '../router'
 import toggleReadingList from '../toggleReadingList'
+import Skeleton from '../components/Skeleton'
 const updateBookList = (searchedList) => {
   const savedBooks = store.getLocalStorage()
 
@@ -112,13 +113,11 @@ const saveSearchedList = (searchedList) => {
 
 const SearchList = {
   bookList: [],
-  searchQuery: '',
   currentPage: 1,
   async search(query, page) {
     try {
       const data = await BookApi.getBookList({ query, page })
       const pages = data.meta.total_count
-      console.log(`this`, this)
 
       if (pages > 0) {
         const { documents: searchedResult } = data
@@ -141,22 +140,23 @@ const SearchList = {
     const params = Object.fromEntries(urlSearchParams.entries())
     const query = params.q
 
-    if (this.searchQuery !== query) {
-      this.currentPage = 1
-    }
-    this.searchQuery = query
-
     // 책 검색
-    console.log(query, this.currentPage)
     const view = await this.search(query, this.currentPage)
     return view
   },
-  async before_render() {
-    this.currentPage = 1
-    this.searchQuery = ''
+  async before_render({ resetPage }) {
+    // 페이지 초기화
+    if (resetPage) {
+      this.currentPage = 1
+      this.bookList = []
+    }
+
+    return Skeleton(10)
   },
   async after_render() {
-    console.log(`SearchList`, `after_render`)
+    if (this.bookList.length === 0) {
+      return
+    }
     // 도서 대출 상태 조회하기
     checkBookStatus(this)
 

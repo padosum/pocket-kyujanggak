@@ -10,9 +10,9 @@ export default function Card(props) {
   const description = cutDescription ? cutString(contents, 100) : contents
   const imageUrl = thumbnail === '' ? '../assets/no-image.png' : thumbnail
 
-  return `<div class="card d-flex mb-10">
+  return `<div class="card d-flex mb-10 primary-shadow">
       <div class="thumbnail_wrap d-flex justify-center p-8">
-        <img src="${imageUrl}"/>
+        <img class="primary-shadow" src="${imageUrl}"/>
       </div>
       <div class="info_wrap d-flex flex-col flex-grow py-0 px-3">
         <div class="title_wrap d-flex justify-between mt-4">
@@ -31,8 +31,11 @@ export default function Card(props) {
         ${
           updated === getToday()
             ? StatusBox(props)
-            : `<div class="message d-flex" data-isbn="${isbn}"><span class="mt-1"><i class="fa-solid fa-magnifying-glass"></i> 확인중입니다...</span> <span class="lds-dual-ring"></span>
-        </div>`
+            : `<div class="message d-flex items-center" data-isbn="${isbn}">
+                <span class="mt-1"><i class="fa-solid fa-magnifying-glass"></i> 확인 중입니다...</span>
+                <span class="lds-dual-ring"></span>
+               </div>
+              `
         }
         <div class="info_button_wrap d-flex justify-end py-3">
           ${ButtonBox(props)}
