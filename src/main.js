@@ -10,8 +10,8 @@ import './style/style.css'
 
 const setEvent = () => {
   document.body.addEventListener('click', (e) => {
-    if (!e.target.classList.contains('dd-button')) {
-      const dropdowns = [...document.getElementsByClassName('dd-button')]
+    if (!e.target.classList.contains('dd-btn')) {
+      const dropdowns = [...document.getElementsByClassName('dd-btn')]
       dropdowns.forEach((dropdown) => {
         if (dropdown.classList.contains('show')) {
           dropdown.classList.remove('show')

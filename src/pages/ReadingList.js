@@ -28,7 +28,7 @@ const ReadingList = {
         }
 
         // 희망도서 신청
-        if (e.target.classList.contains('dd-button')) {
+        if (e.target.classList.contains('dd-btn')) {
           e.target.classList.toggle('show')
           return
         }

@@ -1,11 +1,18 @@
-html {
-  scroll-behavior: smooth;
+@font-face {
+  font-family: 'ChosunGs';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGs.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
+html,
 body {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 1rem;
+  font-family: 'Pretendard', sans-serif;
   color: #333;
   background-color: #fafafa;
+  scroll-behavior: smooth;
 }
 
 a {
@@ -17,8 +24,8 @@ a {
 a:hover,
 a:active,
 a:visited {
-  text-decoration: none;
   color: rgb(0, 53, 105);
+  text-decoration: none;
 }
 
 .pointer-none {
@@ -45,10 +52,10 @@ input[type] {
 
 header {
   top: 0;
+  z-index: 10;
   height: 110px;
   background-color: #fff;
   border-bottom: 1px solid #003ee6;
-  z-index: 10;
 }
 
 .header_img_wrap {
@@ -61,7 +68,7 @@ header {
 }
 
 header .title {
-  font-family: 'Nanum Myeongjo', serif;
+  font-family: 'ChosunGs';
   font-size: 1.4rem;
   color: rgb(0, 62, 230);
   border: 1px solid rgb(0, 62, 230);
@@ -76,32 +83,81 @@ header .header-contents .search_form input {
   font-size: 16px;
 }
 
-.btn {
-  background-color: rgb(0, 62, 230);
-  font-size: 12px;
-  color: #fff;
-  padding: 9px 8px;
-  border-radius: 3px;
-  outline: 0;
-  border-style: none;
-  text-align: center;
+header .reading_list {
+  font-weight: 300;
+  font-size: 16px;
+  color: rgb(0, 62, 230);
+  border: 1px solid rgb(0, 62, 230);
+  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
 }
 
-.dd-button {
+@media screen and (max-width: 320px) {
+  header .header-contents .search_form input {
+    width: 80px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  header .header_img_wrap {
+    height: 30%;
+  }
+
+  header .header-contents .search_form input {
+    margin: 0.1rem;
+  }
+
+  header .header-contents .search_form .search_btn {
+    display: none;
+  }
+
+  header .header-contents .search_form input {
+    margin-right: 3px;
+  }
+}
+
+header input {
+  color: #003ee6;
+  font-size: 12px;
+  min-width: 200px;
+  background: #fafafa;
+  border: solid 1px #003ee6;
+  box-shadow: 5px 6px 0px #0030b3;
+}
+
+header input::placeholder {
+  color: #003ee6;
+}
+
+.btn {
+  padding: 9px 8px;
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  background-color: rgb(0, 62, 230);
+  border-radius: 3px;
+  border-style: none;
+  outline: 0;
+}
+
+/*------------------------------------*\
+  #DROPDOWN BUTTON
+\*------------------------------------*/
+
+.dd-btn {
   display: inline-block;
   cursor: pointer;
 }
 
-.dd-button:after {
+.dd-btn:after {
   content: '';
   display: inline-block;
-  margin-left: 0.255em;
-  transform: translateY(-50%);
   width: 0;
   height: 0;
-  border-left: 0.3em solid transparent;
-  border-right: 0.3em solid transparent;
+  margin-left: 0.255em;
+  transform: translateY(-50%);
   border-top: 0.3em solid #fff;
+  border-right: 0.3em solid transparent;
+  border-left: 0.3em solid transparent;
 }
 
 .dd-input {
@@ -111,12 +167,12 @@ header .header-contents .search_form input {
 .dd-menu {
   position: absolute;
   top: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   padding: 0;
   margin: 2px 0 0 0;
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   list-style-type: none;
 }
 
@@ -145,27 +201,6 @@ header .header-contents .search_form input {
   color: rgb(0, 48, 179);
 }
 
-header .reading_list {
-  border: 1px solid rgb(0, 62, 230);
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
-  color: rgb(0, 62, 230);
-  font-weight: 300;
-  font-size: 16px;
-}
-
-header input {
-  background: #fafafa;
-  border: solid 1px #003ee6;
-  box-shadow: 5px 6px 0px #0030b3;
-  color: #003ee6;
-  font-size: 12px;
-  min-width: 200px;
-}
-
-header input::placeholder {
-  color: #003ee6;
-}
-
 /*------------------------------------*\
   #MAIN
 \*------------------------------------*/
@@ -174,8 +209,14 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 3rem 20vw;
   background-color: #fafafa;
-  padding: 45px;
+}
+
+@media screen and (max-width: 1024px) {
+  main {
+    padding: 3rem 10vw;
+  }
 }
 
 main h2.title {
@@ -185,12 +226,12 @@ main h2.title {
 }
 
 main .information {
-  border-radius: 3px;
-  background-color: #fff;
-  border: solid 1px rgb(0, 62, 230);
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
   line-height: 1.5;
   word-break: keep-all;
+  background-color: #fff;
+  border: solid 1px rgb(0, 62, 230);
+  border-radius: 3px;
+  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
 }
 
 /*------------------------------------*\
@@ -198,10 +239,16 @@ main .information {
 \*------------------------------------*/
 
 .card {
+  background-color: #fff;
   border-radius: 3px;
   border: 1px solid rgb(0, 62, 230);
-  background-color: #fff;
   box-shadow: rgb(0, 48, 179) 5px 6px 0px;
+}
+
+@media screen and (max-width: 768px) {
+  .card {
+    flex-direction: column;
+  }
 }
 
 .card .thumbnail_wrap img {
@@ -215,13 +262,21 @@ main .information {
 
 .card .info_wrap .title_wrap {
   font-size: 22px;
-  color: rgb(17, 17, 17);
   font-weight: 600;
+  color: rgb(17, 17, 17);
 }
 
 .card .info_wrap .title_wrap .title {
   width: 95%;
   word-break: keep-all;
+}
+
+.card .info_wrap .title_wrap .title:before {
+  content: '『';
+}
+
+.card .info_wrap .title_wrap .title:after {
+  content: '』';
 }
 
 .card .info_wrap .title_wrap a {
@@ -288,10 +343,10 @@ main .information {
 
 .pagination a {
   padding: 2px 8px;
+  color: rgb(0, 62, 230);
   border: 1px solid rgb(0, 62, 230);
   box-shadow: rgb(0, 48, 179) 5px 6px 0px;
   background-color: #fff;
-  color: rgb(0, 62, 230);
   cursor: pointer;
 }
 
@@ -316,38 +371,9 @@ footer .top {
   display: none;
   right: 0;
   bottom: 20px;
-
-  background: #fafafa;
   color: rgb(0, 62, 230);
   border: 1px solid rgb(0, 62, 230);
+  background: #fafafa;
   box-shadow: rgb(0, 48, 179) 5px 6px 0px;
   white-space: nowrap;
-}
-
-@media screen and (max-width: 320px) {
-  header .header-contents .search_form input {
-    width: 80px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  header .header_img_wrap {
-    height: 30%;
-  }
-
-  header .header-contents .search_form input {
-    margin: 0.1rem;
-  }
-
-  header .header-contents .search_form .search_btn {
-    display: none;
-  }
-
-  header .header-contents .search_form input {
-    margin-right: 3px;
-  }
-
-  main .card {
-    flex-direction: column;
-  }
 }
