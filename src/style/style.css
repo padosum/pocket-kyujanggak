@@ -1,3 +1,10 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.3.6,
+* Autoprefixer: v10.3.1
+* Browsers: last 4 version
+*/
+
 html,
 body {
   font-size: 1rem;
@@ -40,11 +47,13 @@ input[type] {
 
 .primary-shadow {
   border: 1px solid rgb(0, 62, 230);
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
+  -webkit-box-shadow: rgb(0, 48, 179) 5px 6px 0px;
+          box-shadow: rgb(0, 48, 179) 5px 6px 0px;
 }
 
 .second-shadow {
-  box-shadow: 0 2px 4px 1px rgb(0 0 0 / 17%);
+  -webkit-box-shadow: 0 2px 4px 1px rgb(0 0 0 / 17%);
+          box-shadow: 0 2px 4px 1px rgb(0 0 0 / 17%);
 }
 
 /*------------------------------------*\
@@ -119,6 +128,22 @@ header input {
   background: #fafafa;
 }
 
+header input::-webkit-input-placeholder {
+  color: #003ee6;
+}
+
+header input::-moz-placeholder {
+  color: #003ee6;
+}
+
+header input:-ms-input-placeholder {
+  color: #003ee6;
+}
+
+header input::-ms-input-placeholder {
+  color: #003ee6;
+}
+
 header input::placeholder {
   color: #003ee6;
 }
@@ -149,7 +174,9 @@ header input::placeholder {
   width: 0;
   height: 0;
   margin-left: 0.255em;
-  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
   border-top: 0.3em solid #fff;
   border-right: 0.3em solid transparent;
   border-left: 0.3em solid transparent;
@@ -164,7 +191,8 @@ header input::placeholder {
   top: 100%;
   padding: 0;
   margin: 2px 0 0 0;
-  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -201,9 +229,16 @@ header input::placeholder {
 \*------------------------------------*/
 
 main {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   padding: 1rem 20vw;
   background-color: #fafafa;
 }
@@ -243,7 +278,10 @@ main .information {
 
 @media screen and (max-width: 768px) {
   .card {
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
 }
 
@@ -289,7 +327,9 @@ main .information {
 }
 
 .card .info_wrap .message {
-  flex: 1 1 0%;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 0%;
+          flex: 1 1 0%;
   color: rgb(17, 17, 17);
 }
 
@@ -315,16 +355,31 @@ main .information {
   border-radius: 50%;
   border: 5px solid #666;
   border-color: #666 transparent #666 transparent;
-  animation: lds-dual-ring 1.2s linear infinite;
+  -webkit-animation: lds-dual-ring 1.2s linear infinite;
+          animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@-webkit-keyframes lds-dual-ring {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
 }
 
 @keyframes lds-dual-ring {
   0% {
-    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
   }
 
   100% {
-    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
   }
 }
 
@@ -336,7 +391,8 @@ main .information {
   padding: 2px 8px;
   color: rgb(0, 62, 230);
   border: 1px solid rgb(0, 62, 230);
-  box-shadow: rgb(0, 48, 179) 5px 6px 0px;
+  -webkit-box-shadow: rgb(0, 48, 179) 5px 6px 0px;
+          box-shadow: rgb(0, 48, 179) 5px 6px 0px;
   background-color: #fff;
   cursor: pointer;
 }
