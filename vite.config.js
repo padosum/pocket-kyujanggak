@@ -27,6 +27,7 @@ export default defineConfig({
       },
     }),
     ViteWebfontDownload([
+      'https://webfontworld.github.io/ChosunGs/ChosunGs.css',
       'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css',
     ]),
   ],
