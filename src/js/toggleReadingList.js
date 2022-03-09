@@ -1,8 +1,7 @@
 import { Notyf } from 'notyf'
-import store from './store'
-
 import 'notyf/notyf.min.css'
-import { $ } from './helpers/utils'
+import store from '../store'
+import { $ } from '../helpers/utils'
 
 const toggleBookData = (isbn) => {
   const savedBooks = store.getLocalStorage()
