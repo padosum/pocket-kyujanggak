@@ -249,7 +249,7 @@ main {
   }
 }
 
-main h2.title {
+main h1.title {
   font-size: 20px;
   font-weight: 700;
   color: rgb(0, 53, 105);

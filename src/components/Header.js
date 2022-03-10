@@ -9,7 +9,7 @@ const Header = {
           </div>
       </div>
       <header class="sticky d-flex flex-col items-center pt-1">
-        <a class="js-nav" href="/"><h1 class="title mt-1 p-2 primary-shadow pointer-none">포켓 규장각</h1></a>
+        <a class="js-nav" href="/"><div class="title mt-1 my-3 p-2 primary-shadow pointer-none">포켓 규장각</div></a>
         <div class="header-contents d-flex justify-center">
           <div class="search_form d-flex items-center mr-2">
             <input class="primary-shadow mr-2 p-1" id="query" type="text" placeholder="도서명" aria-label="도서명 검색"/>
