@@ -7,14 +7,15 @@ export default function Card(props) {
   const authorsList = Array.isArray(authors) ? authors.join(', ') : authors
   const cutDescription = contents.length > 100
   const description = cutDescription ? cutString(contents, 100) : contents
-  const imageUrl = thumbnail === '' ? '../assets/no-image.png' : thumbnail
+  const imageUrl = thumbnail || '../assets/no-image.png'
   const lazyload = idx > 2
   const imageClass = lazyload ? ` lazy` : ''
   const imageSrc = lazyload ? `` : ` src=${imageUrl}`
+  const imagAlt = thumbnail ? `도서 '${title}'의 표지` : `도서 표지 이미지 없음`
 
   return `<div class="card d-flex mb-10 primary-shadow">
       <div class="d-flex justify-center p-8">
-        <img class="book-img primary-shadow${imageClass}"${imageSrc} data-src="${imageUrl}"/>
+        <img class="book-img primary-shadow${imageClass}"${imageSrc} data-src="${imageUrl}" width="120px" height="160px" data-alt="${imagAlt} "/>
       </div> 
       <div class="info_wrap d-flex flex-col flex-grow py-0 px-3">
         <div class="title_wrap d-flex justify-between mt-4">

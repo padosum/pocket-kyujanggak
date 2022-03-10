@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 let lazyloadThrottleTimeout
 function lazyload() {
   const lazyloadImages = document.querySelectorAll('img.lazy')
@@ -10,9 +11,9 @@ function lazyload() {
     const scrollTop = window.pageYOffset
     lazyloadImages.forEach((img) => {
       if (img.offsetTop < window.innerHeight + scrollTop) {
-        // eslint-disable-next-line
         img.src = img.dataset.src
         img.classList.remove('lazy')
+        img.alt = img.dataset.alt
       }
     })
     if (lazyloadImages.length === 0) {
