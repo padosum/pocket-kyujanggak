@@ -3,15 +3,18 @@ import StatusBox from './StatusBox'
 import ButtonBox from './ButtonBox'
 
 export default function Card(props) {
-  const { authors, thumbnail, title, contents, url, updated, isbn } = props
+  const { authors, thumbnail, title, contents, url, updated, isbn, idx } = props
   const authorsList = Array.isArray(authors) ? authors.join(', ') : authors
   const cutDescription = contents.length > 100
   const description = cutDescription ? cutString(contents, 100) : contents
   const imageUrl = thumbnail === '' ? '../assets/no-image.png' : thumbnail
+  const lazyload = idx > 2
+  const imageClass = lazyload ? ` lazy` : ''
+  const imageSrc = lazyload ? `` : ` src=${imageUrl}`
 
   return `<div class="card d-flex mb-10 primary-shadow">
-      <div class="thumbnail_wrap d-flex justify-center p-8">
-        <img class="primary-shadow" src="${imageUrl}"/>
+      <div class="d-flex justify-center p-8">
+        <img class="book-img primary-shadow${imageClass}"${imageSrc} data-src="${imageUrl}"/>
       </div> 
       <div class="info_wrap d-flex flex-col flex-grow py-0 px-3">
         <div class="title_wrap d-flex justify-between mt-4">

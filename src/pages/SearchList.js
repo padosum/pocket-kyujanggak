@@ -6,6 +6,7 @@ import { $, contentRender } from '../helpers/utils'
 import toggleReadingList from '../js/toggleReadingList'
 import checkBookStatus from '../js/checkBookStatus'
 import Skeleton from '../components/Skeleton'
+import setLazyload from '../js/setLazyLoad'
 
 const updateBookList = (searchedList) => {
   const savedBooks = store.getLocalStorage()
@@ -109,6 +110,8 @@ const SearchList = {
         this.handlePageChange(Number(e.target.dataset.page))
       }
     })
+
+    setLazyload()
   },
 
   async handlePageChange(page) {

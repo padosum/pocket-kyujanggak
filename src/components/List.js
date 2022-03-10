@@ -4,7 +4,7 @@ export default function List(books, listTitle) {
   let list = `<h2 class="title mb-5">${listTitle}</h2>
       <div class="list">`
 
-  books.forEach((el) => {
+  books.forEach((el, idx) => {
     const {
       title,
       authors,
@@ -28,6 +28,7 @@ export default function List(books, listTitle) {
       loanAvailable,
       updated,
       isListed,
+      idx,
     })
   })
 

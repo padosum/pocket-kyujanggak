@@ -276,6 +276,10 @@ main .information {
   height: 160px;
 }
 
+.lazy {
+  background: rgba(0, 0, 0, 0.17);
+}
+
 @media screen and (max-width: 768px) {
   .card {
     -webkit-box-orient: vertical;

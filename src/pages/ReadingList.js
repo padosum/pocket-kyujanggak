@@ -1,9 +1,10 @@
 import store from '../store'
 import List from '../components/List'
+import Skeleton from '../components/Skeleton'
 import { $ } from '../helpers/utils'
 import toggleReadingList from '../js/toggleReadingList'
-import Skeleton from '../components/Skeleton'
 import checkBookStatus from '../js/checkBookStatus'
+import setLazyload from '../js/setLazyLoad'
 
 const ReadingList = {
   bookList: [],
@@ -42,6 +43,7 @@ const ReadingList = {
         e.target.classList.toggle('show')
       }
     })
+    setLazyload()
   },
 }
 
