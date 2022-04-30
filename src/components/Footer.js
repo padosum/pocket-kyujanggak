@@ -4,7 +4,7 @@ const Footer = () => {
       <a href="#" class="top fixed mr-5 p-3 primary-shadow">
         <i class="fa-solid fa-arrow-up"></i>
       </a>
-        POCKET-KYUJANGGAK
+      <a href="/" title="pocket kyujanggak">POCKET-KYUJANGGAK</a>
     </footer>`
 }
 

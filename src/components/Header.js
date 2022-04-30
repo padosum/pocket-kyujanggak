@@ -15,7 +15,7 @@ const Header = {
             <input class="primary-shadow mr-2 p-1" id="query" type="text" placeholder="도서명" aria-label="도서명 검색"/>
           </div>
           <nav class="d-flex items-center">
-            <a class="js-nav reading_list primary-shadow p-1" href="/readinglist" title="읽기 목록"><i class="fa-solid fa-bookmark pointer-none"></i></a>
+            <a class="js-nav reading_list primary-shadow p-1" href="/readinglist" aria-label="읽기 목록으로 이동" title="읽기 목록"><i class="fa-solid fa-bookmark pointer-none"></i></a>
           </nav>
         </div> 
       </header>
