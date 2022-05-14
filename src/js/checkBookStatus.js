@@ -10,7 +10,6 @@ const renderBookStatus = (book) => {
   // 도서 검색 결과에 중복이 있을 수 있음 -> 똑같은 dataset을 가진 여러 개의 div가 있을 수 있음
   // 따라서 모두 업데이트해줘야 함
   const statusBoxes = document.querySelectorAll(`div[data-isbn='${book.isbn}']`)
-
   if (statusBoxes.length > 0) {
     statusBoxes.forEach((statusBox) => {
       statusBox.innerHTML = StatusBox(book)
@@ -18,13 +17,12 @@ const renderBookStatus = (book) => {
   }
 
   const infoButtons = document.querySelectorAll(
-    `button[data-isbn='${book.isbn}']`
+    `.info_button_wrap[data-isbn='${book.isbn}']`
   )
-
   if (infoButtons.length > 0) {
     infoButtons.forEach((infoButton) => {
-      const infoButtonWrap = infoButton.closest('div')
-      infoButtonWrap.innerHTML = ButtonBox(book)
+      infoButton.innerHTML = ButtonBox(book)
+      // const infoButtonWrap = infoButton.closest('div')
     })
   }
 }
@@ -68,6 +66,7 @@ const checkBookStatus = async ({ bookList }) => {
             ...bookMap.get(book.isbn),
             hasBook,
             loanAvailable,
+            updated: getToday(),
           })
 
           if (!response.error) {

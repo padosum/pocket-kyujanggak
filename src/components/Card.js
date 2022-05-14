@@ -40,7 +40,7 @@ export default function Card(props) {
                </div>
               `
         }
-        <div class="info_button_wrap d-flex justify-end py-3">
+        <div class="info_button_wrap d-flex justify-end py-3" data-isbn="${isbn}">
           ${ButtonBox(props)}
         </div>
       </div>
