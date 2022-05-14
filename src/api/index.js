@@ -6,23 +6,28 @@ const URLS = {
 }
 
 const request = async (url, params, option) => {
-  const urlSearchParams = new URLSearchParams(params)
-  const response = await fetch(`${url}?${urlSearchParams}`, option)
+  const notyf = new Notyf({
+    dismissible: true,
+  })
   try {
+    const urlSearchParams = new URLSearchParams(params)
+    const response = await fetch(`${url}?${urlSearchParams}`, option)
+
     if (!response.ok) {
-      const notyf = new Notyf({
-        dismissible: true,
-      })
-      notyf.error('에러가 발생했습니다.')
+      notyf.error('오류가 발생했습니다.')
+      console.error(response.status, response.statusText)
     }
+
     return response.json()
   } catch (err) {
-    return err
+    notyf.error('오류가 발생했습니다.')
+    console.error(err)
+    return false
   }
 }
 
 const BookApi = {
-  async getBookStatus(isbn13) {
+  getBookStatus(isbn13) {
     const authKey = import.meta.env.VITE_LIBRARY_API_KEY
     const libCode = '121014'
     return request(URLS.BookStatus, {
@@ -32,7 +37,7 @@ const BookApi = {
       format: 'json',
     })
   },
-  async getBookList(params) {
+  getBookList(params) {
     return request(URLS.BookList, params, {
       headers: {
         Authorization: import.meta.env.VITE_KAKAO_API_KEY,
