@@ -3,20 +3,29 @@ import StatusBox from '../components/StatusBox'
 import ButtonBox from '../components/ButtonBox'
 import store from '../store'
 import BookApi from '../api'
-import { getToday, $ } from '../helpers/utils'
+import { getToday } from '../helpers/utils'
 
 const renderBookStatus = (book) => {
-  // update ui
-  const statusBox = $(`div[data-isbn='${book.isbn}']`)
+  // 대출 상태 업데이트
+  // 도서 검색 결과에 중복이 있을 수 있음 -> 똑같은 dataset을 가진 여러 개의 div가 있을 수 있음
+  // 따라서 모두 업데이트해줘야 함
+  const statusBoxes = document.querySelectorAll(`div[data-isbn='${book.isbn}']`)
 
-  if (statusBox) {
-    statusBox.innerHTML = StatusBox(book)
+  if (statusBoxes.length > 0) {
+    statusBoxes.forEach((statusBox) => {
+      statusBox.innerHTML = StatusBox(book)
+    })
   }
 
-  const infoButton = $(`button[data-isbn='${book.isbn}']`)
-  if (infoButton) {
-    const infoButtonWrap = infoButton.closest('div')
-    infoButtonWrap.innerHTML = ButtonBox(book)
+  const infoButtons = document.querySelectorAll(
+    `button[data-isbn='${book.isbn}']`
+  )
+
+  if (infoButtons.length > 0) {
+    infoButtons.forEach((infoButton) => {
+      const infoButtonWrap = infoButton.closest('div')
+      infoButtonWrap.innerHTML = ButtonBox(book)
+    })
   }
 }
 
@@ -43,29 +52,25 @@ const checkBookStatus = async ({ bookList }) => {
         shouldUpdateList.map(async (book) => {
           let hasBook = 'N'
           let loanAvailable = 'N'
-          try {
-            bookMap.set(book.isbn, book)
+          bookMap.set(book.isbn, book)
 
-            // 대출 상태 가져오기
-            const [, isbn13] = book.isbn.split(' ')
-            const { response } = await BookApi.getBookStatus(isbn13)
+          // 대출 상태 가져오기
+          const [, isbn13] = book.isbn.split(' ')
+          const { response } = await BookApi.getBookStatus(isbn13)
 
-            if (!response.error) {
-              hasBook = response.result.hasBook
-              loanAvailable = response.result.loanAvailable
-            } else {
-              throw new Error(response.error)
-            }
-          } catch (err) {
-            throw new Error(err)
-          } finally {
-            // 도서 상태 ui 업데이트
-            renderBookStatus({
-              ...bookMap.get(book.isbn),
-              hasBook,
-              loanAvailable,
-            })
+          if (!response.error) {
+            hasBook = response.result.hasBook
+            loanAvailable = response.result.loanAvailable
+          }
 
+          // 도서 상태 ui 업데이트
+          renderBookStatus({
+            ...bookMap.get(book.isbn),
+            hasBook,
+            loanAvailable,
+          })
+
+          if (!response.error) {
             // 도서 상태 정보 저장
             store.setLocalStorage(
               updateDate({
@@ -74,6 +79,8 @@ const checkBookStatus = async ({ bookList }) => {
                 loanAvailable,
               })
             )
+          } else {
+            throw new Error(response.error)
           }
         })
       )
