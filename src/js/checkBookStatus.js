@@ -22,7 +22,6 @@ const renderBookStatus = (book) => {
   if (infoButtons.length > 0) {
     infoButtons.forEach((infoButton) => {
       infoButton.innerHTML = ButtonBox(book)
-      // const infoButtonWrap = infoButton.closest('div')
     })
   }
 }
